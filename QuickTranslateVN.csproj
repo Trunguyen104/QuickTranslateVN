@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
@@ -11,18 +11,12 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AssemblyName>QuickTranslateVN</AssemblyName>
     <RootNamespace>QuickTranslateVN</RootNamespace>
-    <Version>1.2.0</Version>
-    <Authors>QuickTranslateVN Contributors</Authors>
-    <Description>Lightweight system-wide instant text &amp; OCR translator for Windows</Description>
-    <!-- Low-memory Workstation GC tuning for lightweight tray apps -->
+    <Version>2.0.0</Version>
+    <Description>Ultra-lightweight system-wide instant text translator for Windows</Description>
     <ServerGarbageCollection>false</ServerGarbageCollection>
     <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
     <RetainVMGarbageCollection>false</RetainVMGarbageCollection>
+    <DebugType>none</DebugType>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="GTranslate" Version="2.3.1" />
-    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
-  </ItemGroup>
 
 </Project>

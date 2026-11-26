@@ -7,9 +7,7 @@ namespace QuickTranslateVN.Services;
 
 public sealed class GlobalInputManager : IDisposable
 {
-    private const int HOTKEY_TRANSLATE_ID = 9001;     // Alt + Q
-    private const int HOTKEY_OCR_ID = 9002;           // Alt + S
-    private const int HOTKEY_QUICK_INPUT_ID = 9003;   // Ctrl + Shift + T
+    private const int HOTKEY_TRANSLATE_ID = 9001; // Alt + Q
 
     private HwndSource? _hwndSource;
     private IntPtr _mouseHookId = IntPtr.Zero;
@@ -30,11 +28,9 @@ public sealed class GlobalInputManager : IDisposable
     private long _lastCtrlCTick;
 
     public event Action? QuickTranslateHotkeyPressed;
-    public event Action? QuickInputHotkeyPressed;
-    public event Action? OcrHotkeyPressed;
     public event Action? DoubleCopyTriggered;
     public event Action<NativeMethods.POINT>? TextSelectionSuspected;
-    public event Action<NativeMethods.POINT>? ExternalMouseAction;
+    public event Action? ExternalMouseAction;
     public event Action? EscapePressed;
 
     public bool EnableFloatingBadge { get; set; } = true;
@@ -59,26 +55,11 @@ public sealed class GlobalInputManager : IDisposable
         _hwndSource = new HwndSource(parameters);
         _hwndSource.AddHook(WndProc);
 
-        // Alt + Q: Instant translate selection
         NativeMethods.RegisterHotKey(
             _hwndSource.Handle,
             HOTKEY_TRANSLATE_ID,
             NativeMethods.MOD_ALT | NativeMethods.MOD_NOREPEAT,
             NativeMethods.VK_Q);
-
-        // Alt + S: Screen Region OCR + Translate
-        NativeMethods.RegisterHotKey(
-            _hwndSource.Handle,
-            HOTKEY_OCR_ID,
-            NativeMethods.MOD_ALT | NativeMethods.MOD_NOREPEAT,
-            NativeMethods.VK_S);
-
-        // Ctrl + Shift + T: Quick Input / Translate window (inspired by TrayTranslator & QuickTranslate)
-        NativeMethods.RegisterHotKey(
-            _hwndSource.Handle,
-            HOTKEY_QUICK_INPUT_ID,
-            NativeMethods.MOD_CONTROL | NativeMethods.MOD_SHIFT | NativeMethods.MOD_NOREPEAT,
-            NativeMethods.VK_T);
 
         using var curProcess = Process.GetCurrentProcess();
         using var curModule = curProcess.MainModule;
@@ -90,24 +71,10 @@ public sealed class GlobalInputManager : IDisposable
 
     private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
     {
-        if (msg == NativeMethods.WM_HOTKEY)
+        if (msg == NativeMethods.WM_HOTKEY && wParam.ToInt32() == HOTKEY_TRANSLATE_ID)
         {
-            int id = wParam.ToInt32();
-            if (id == HOTKEY_TRANSLATE_ID)
-            {
-                handled = true;
-                System.Windows.Application.Current?.Dispatcher.BeginInvoke(() => QuickTranslateHotkeyPressed?.Invoke());
-            }
-            else if (id == HOTKEY_OCR_ID)
-            {
-                handled = true;
-                System.Windows.Application.Current?.Dispatcher.BeginInvoke(() => OcrHotkeyPressed?.Invoke());
-            }
-            else if (id == HOTKEY_QUICK_INPUT_ID)
-            {
-                handled = true;
-                System.Windows.Application.Current?.Dispatcher.BeginInvoke(() => QuickInputHotkeyPressed?.Invoke());
-            }
+            handled = true;
+            System.Windows.Application.Current?.Dispatcher.BeginInvoke(() => QuickTranslateHotkeyPressed?.Invoke());
         }
         return IntPtr.Zero;
     }
@@ -115,11 +82,9 @@ public sealed class GlobalInputManager : IDisposable
     private bool IsCurrentCursorIBeam()
     {
         var ci = new NativeMethods.CURSORINFO { cbSize = Marshal.SizeOf<NativeMethods.CURSORINFO>() };
-        if (NativeMethods.GetCursorInfo(ref ci) && (ci.flags & NativeMethods.CURSOR_SHOWING) != 0)
-        {
-            return ci.hCursor == _hIBeamCursor;
-        }
-        return false;
+        return NativeMethods.GetCursorInfo(ref ci)
+            && (ci.flags & NativeMethods.CURSOR_SHOWING) != 0
+            && ci.hCursor == _hIBeamCursor;
     }
 
     private bool IsPointOnOwnProcess(NativeMethods.POINT pt)
@@ -151,45 +116,42 @@ public sealed class GlobalInputManager : IDisposable
                             _mouseDownPt = pt;
                             _mouseDownTick = now;
                             _mouseDownWasIBeam = EnableFloatingBadge && IsCurrentCursorIBeam();
-                            System.Windows.Application.Current?.Dispatcher.BeginInvoke(() => ExternalMouseAction?.Invoke(pt));
+                            System.Windows.Application.Current?.Dispatcher.BeginInvoke(() => ExternalMouseAction?.Invoke());
                         }
                     }
                     else if (msg is NativeMethods.WM_RBUTTONDOWN or NativeMethods.WM_MOUSEWHEEL)
                     {
                         if (!IsPointOnOwnProcess(pt))
                         {
-                            System.Windows.Application.Current?.Dispatcher.BeginInvoke(() => ExternalMouseAction?.Invoke(pt));
+                            System.Windows.Application.Current?.Dispatcher.BeginInvoke(() => ExternalMouseAction?.Invoke());
                         }
                     }
                     else if (msg == NativeMethods.WM_LBUTTONUP && _isLeftButtonDown)
                     {
                         _isLeftButtonDown = false;
 
-                        if (EnableFloatingBadge && !IsPointOnOwnProcess(pt))
+                        if (EnableFloatingBadge && !IsPointOnOwnProcess(pt) && (_mouseDownWasIBeam || IsCurrentCursorIBeam()))
                         {
-                            bool upIsIBeam = IsCurrentCursorIBeam();
-                            if (_mouseDownWasIBeam || upIsIBeam)
+                            int dx = pt.X - _mouseDownPt.X;
+                            int dy = pt.Y - _mouseDownPt.Y;
+                            double dist = Math.Sqrt(dx * dx + dy * dy);
+                            long dragDuration = now - _mouseDownTick;
+
+                            bool isDragSelect = dist >= 14 && dragDuration is >= 40 and <= 15000;
+
+                            int dblDx = pt.X - _lastClickUpPt.X;
+                            int dblDy = pt.Y - _lastClickUpPt.Y;
+                            bool isDoubleClickWord = dist < 8
+                                && Math.Sqrt(dblDx * dblDx + dblDy * dblDy) < 8
+                                && (now - _lastClickUpTick) is >= 40 and <= 400;
+
+                            _lastClickUpPt = pt;
+                            _lastClickUpTick = now;
+
+                            if (isDragSelect || isDoubleClickWord)
                             {
-                                int dx = pt.X - _mouseDownPt.X;
-                                int dy = pt.Y - _mouseDownPt.Y;
-                                double dist = Math.Sqrt(dx * dx + dy * dy);
-                                long dragDuration = now - _mouseDownTick;
-
-                                bool isDragSelect = dist >= 14 && dragDuration is >= 40 and <= 15000;
-
-                                int dblDx = pt.X - _lastClickUpPt.X;
-                                int dblDy = pt.Y - _lastClickUpPt.Y;
-                                double dblDist = Math.Sqrt(dblDx * dblDx + dblDy * dblDy);
-                                bool isDoubleClickWord = dist < 8 && dblDist < 8 && (now - _lastClickUpTick) is >= 40 and <= 400;
-
-                                _lastClickUpPt = pt;
-                                _lastClickUpTick = now;
-
-                                if (isDragSelect || isDoubleClickWord)
-                                {
-                                    System.Windows.Application.Current?.Dispatcher.BeginInvoke(
-                                        () => TextSelectionSuspected?.Invoke(pt));
-                                }
+                                System.Windows.Application.Current?.Dispatcher.BeginInvoke(
+                                    () => TextSelectionSuspected?.Invoke(pt));
                             }
                         }
                     }
@@ -253,18 +215,14 @@ public sealed class GlobalInputManager : IDisposable
             NativeMethods.UnhookWindowsHookEx(_mouseHookId);
             _mouseHookId = IntPtr.Zero;
         }
-
         if (_keyboardHookId != IntPtr.Zero)
         {
             NativeMethods.UnhookWindowsHookEx(_keyboardHookId);
             _keyboardHookId = IntPtr.Zero;
         }
-
         if (_hwndSource != null)
         {
             NativeMethods.UnregisterHotKey(_hwndSource.Handle, HOTKEY_TRANSLATE_ID);
-            NativeMethods.UnregisterHotKey(_hwndSource.Handle, HOTKEY_OCR_ID);
-            NativeMethods.UnregisterHotKey(_hwndSource.Handle, HOTKEY_QUICK_INPUT_ID);
             _hwndSource.Dispose();
             _hwndSource = null;
         }

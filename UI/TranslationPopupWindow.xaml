@@ -1,9 +1,9 @@
 <Window x:Class="QuickTranslateVN.UI.TranslationPopupWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Width="440"
+        Width="380"
         SizeToContent="Height"
-        MaxHeight="510"
+        MaxHeight="420"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -20,7 +20,7 @@
             <Setter Property="Padding" Value="6,3"/>
             <Setter Property="Margin" Value="1.5,0"/>
             <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="FontSize" Value="11.5"/>
+            <Setter Property="FontSize" Value="12"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -42,149 +42,97 @@
         </Style>
     </Window.Resources>
 
-    <Grid Margin="8">
-        <Border Background="#161922"
+    <Grid Margin="6">
+        <Border Background="#181B23"
                 BorderBrush="#2E3648"
                 BorderThickness="1"
-                CornerRadius="12">
+                CornerRadius="11">
             <Border.Effect>
-                <DropShadowEffect BlurRadius="16" ShadowDepth="4" Opacity="0.58" Color="#000000"/>
+                <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.5" Color="#000000"/>
             </Border.Effect>
 
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- Fluent Header Toolbar (Draggable) -->
+                <!-- Compact Single-Row Toolbar (Draggable) -->
                 <Border Grid.Row="0"
-                        Background="#1E2330"
-                        CornerRadius="12,12,0,0"
-                        Padding="9,7"
+                        Background="#202532"
+                        CornerRadius="11,11,0,0"
+                        Padding="8,5"
                         Cursor="SizeAll"
                         MouseLeftButtonDown="Header_MouseLeftButtonDown"
                         MouseMove="Header_MouseMove"
                         MouseLeftButtonUp="Header_MouseLeftButtonUp">
                     <DockPanel LastChildFill="False">
-                        <!-- Language Swap Pill -->
-                        <Button x:Name="BtnSwapLang"
-                                DockPanel.Dock="Left"
+                        <Button DockPanel.Dock="Left"
                                 Style="{StaticResource IconBtn}"
-                                Background="#263147"
+                                Background="#273248"
                                 Foreground="#60A5FA"
                                 FontFamily="Segoe UI Semibold"
                                 Click="BtnSwapLang_Click"
-                                ToolTip="Bấm để đảo chiều dịch (VI ↔ EN)">
+                                ToolTip="Đảo chiều ngôn ngữ (VI ↔ EN)">
                             <TextBlock x:Name="TxtLangBadge" Text="EN → VI ⇄" FontSize="11.5"/>
                         </Button>
 
-                        <!-- Engine Cycle Pill -->
-                        <Button x:Name="BtnEngine"
-                                DockPanel.Dock="Left"
-                                Style="{StaticResource IconBtn}"
-                                Background="#1A2232"
-                                Foreground="#94A3B8"
-                                Margin="4,0,0,0"
-                                Click="BtnEngine_Click"
-                                ToolTip="Bấm để đổi nhanh Engine dịch (Google / Microsoft / DeepL / AI)">
-                            <TextBlock x:Name="TxtEngineBadge" Text="Google" FontSize="11"/>
-                        </Button>
-
-                        <!-- Latency -->
-                        <TextBlock x:Name="TxtMetaInfo"
+                        <TextBlock x:Name="TxtSpeed"
                                    DockPanel.Dock="Left"
-                                   Text=""
                                    Foreground="#64748B"
                                    FontSize="10.5"
                                    VerticalAlignment="Center"
-                                   Margin="5,0,0,0"/>
+                                   Margin="6,0,0,0"/>
 
-                        <!-- Close -->
                         <Button DockPanel.Dock="Right"
                                 Style="{StaticResource IconBtn}"
                                 Content="✕"
                                 ToolTip="Đóng (ESC)"
                                 Click="BtnClose_Click"/>
 
-                        <!-- Settings & History -->
-                        <Button DockPanel.Dock="Right"
-                                Style="{StaticResource IconBtn}"
-                                Content="⚙️"
-                                ToolTip="Cài đặt &amp; Lịch sử dịch"
-                                Click="BtnSettings_Click"/>
-
-                        <!-- Pin Toggle -->
                         <Button x:Name="BtnPin"
                                 DockPanel.Dock="Right"
                                 Style="{StaticResource IconBtn}"
                                 Content="📌"
                                 Opacity="0.55"
-                                ToolTip="Ghim cửa sổ nổi"
+                                ToolTip="Ghim cửa sổ"
                                 Click="BtnPin_Click"/>
 
-                        <!-- Edit / Quick Input Toggle -->
-                        <Button x:Name="BtnEditInput"
+                        <Button x:Name="BtnCopy"
                                 DockPanel.Dock="Right"
                                 Style="{StaticResource IconBtn}"
-                                Content="✏️"
-                                ToolTip="Nhập hoặc sửa văn bản nguồn (Ctrl+Shift+T)"
-                                Click="BtnEditInput_Click"/>
+                                Content="📋"
+                                ToolTip="Sao chép bản dịch"
+                                Click="BtnCopy_Click"/>
+
+                        <Button x:Name="BtnReplace"
+                                DockPanel.Dock="Right"
+                                Style="{StaticResource IconBtn}"
+                                Content="⏎"
+                                ToolTip="Thay thế trực tiếp đoạn đang chọn bằng bản dịch"
+                                Click="BtnReplace_Click"/>
+
+                        <Button DockPanel.Dock="Right"
+                                Style="{StaticResource IconBtn}"
+                                Content="🔊"
+                                ToolTip="Nghe phát âm câu gốc"
+                                Click="BtnSpeak_Click"/>
                     </DockPanel>
                 </Border>
 
-                <!-- Body Content -->
+                <!-- Minimalist Translation Body -->
                 <ScrollViewer Grid.Row="1"
                               VerticalScrollBarVisibility="Auto"
-                              MaxHeight="370"
-                              Padding="13,10,13,8">
+                              MaxHeight="350"
+                              Padding="12,9,12,11">
                     <StackPanel>
-                        <!-- Interactive Quick Input Box (Visible in Ctrl+Shift+T or Edit mode) -->
-                        <Border x:Name="InputEditorBox"
-                                Visibility="Collapsed"
-                                Margin="0,0,0,9"
-                                Padding="8,6"
-                                Background="#10131A"
-                                BorderBrush="#3B82F6"
-                                BorderThickness="1"
-                                CornerRadius="8">
-                            <StackPanel>
-                                <TextBox x:Name="TxtSourceEditor"
-                                         Background="Transparent"
-                                         Foreground="#E2E8F0"
-                                         CaretBrush="#60A5FA"
-                                         BorderThickness="0"
-                                         AcceptsReturn="True"
-                                         TextWrapping="Wrap"
-                                         MinHeight="44"
-                                         MaxHeight="100"
-                                         VerticalScrollBarVisibility="Auto"
-                                         FontSize="13"
-                                         KeyDown="TxtSourceEditor_KeyDown"/>
-                                <DockPanel Margin="0,5,0,0">
-                                    <TextBlock Foreground="#64748B" FontSize="10.5" VerticalAlignment="Center"
-                                               Text="Nhấn Ctrl + Enter để dịch"/>
-                                    <Button DockPanel.Dock="Right"
-                                            Style="{StaticResource IconBtn}"
-                                            Background="#2563EB"
-                                            Foreground="White"
-                                            Padding="10,3"
-                                            Content="Dịch ngay"
-                                            Click="BtnTranslateInput_Click"/>
-                                </DockPanel>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- Phonetics (if word/phrase) -->
                         <TextBlock x:Name="TxtPhonetic"
                                    Foreground="#94A3B8"
                                    FontStyle="Italic"
-                                   FontSize="12.5"
-                                   Margin="0,0,0,4"
+                                   FontSize="12"
+                                   Margin="0,0,0,3"
                                    Visibility="Collapsed"/>
 
-                        <!-- Main Translated Text -->
                         <TextBox x:Name="TxtTranslated"
                                  Text="Đang dịch..."
                                  Foreground="#F8FAFC"
@@ -193,95 +141,15 @@
                                  IsReadOnly="True"
                                  TextWrapping="Wrap"
                                  FontFamily="Segoe UI"
-                                 FontSize="15"
+                                 FontSize="14.5"
                                  SelectionBrush="#2563EB"
                                  Padding="0"/>
 
-                        <!-- Back-Translation Verification (OpenTranslate style) -->
-                        <Border x:Name="BackTransContainer"
-                                Visibility="Collapsed"
-                                Margin="0,7,0,0"
-                                Padding="7,4"
-                                Background="#131D2E"
-                                CornerRadius="6">
-                            <TextBlock x:Name="TxtBackTranslated"
-                                       Foreground="#93C5FD"
-                                       FontSize="11.5"
-                                       TextWrapping="Wrap"/>
-                        </Border>
-
-                        <!-- Dictionary Breakdown -->
                         <StackPanel x:Name="PanelDictionary"
-                                    Margin="0,8,0,0"
+                                    Margin="0,7,0,0"
                                     Visibility="Collapsed"/>
-
-                        <!-- Compact Source Text Preview -->
-                        <Border x:Name="SourcePreviewContainer"
-                                Margin="0,9,0,0"
-                                Padding="8,5"
-                                Background="#11141C"
-                                BorderBrush="#232836"
-                                BorderThickness="1"
-                                CornerRadius="7">
-                            <TextBlock x:Name="TxtOriginalPreview"
-                                       Foreground="#8896AB"
-                                       FontSize="11.5"
-                                       TextWrapping="Wrap"
-                                       MaxHeight="60"
-                                       TextTrimming="CharacterEllipsis"/>
-                        </Border>
                     </StackPanel>
                 </ScrollViewer>
-
-                <!-- Bottom Action Bar (Copy, Replace In-Place, Speak, Back-Translate) -->
-                <Border Grid.Row="2"
-                        Background="#1A1E29"
-                        CornerRadius="0,0,12,12"
-                        Padding="10,6">
-                    <DockPanel LastChildFill="False">
-                        <Button x:Name="BtnSpeakSource"
-                                DockPanel.Dock="Left"
-                                Style="{StaticResource IconBtn}"
-                                Content="🔊 Gốc"
-                                ToolTip="Nghe phát âm câu gốc"
-                                Click="BtnSpeakSource_Click"/>
-
-                        <Button x:Name="BtnSpeakTarget"
-                                DockPanel.Dock="Left"
-                                Style="{StaticResource IconBtn}"
-                                Content="🔊 Dịch"
-                                ToolTip="Nghe phát âm bản dịch"
-                                Click="BtnSpeakTarget_Click"/>
-
-                        <Button x:Name="BtnBackTranslate"
-                                DockPanel.Dock="Left"
-                                Style="{StaticResource IconBtn}"
-                                Content="↩ Dịch ngược"
-                                ToolTip="Kiểm tra nghĩa dịch ngược về ngôn ngữ gốc"
-                                Click="BtnBackTranslate_Click"/>
-
-                        <Button x:Name="BtnCopy"
-                                DockPanel.Dock="Right"
-                                Style="{StaticResource IconBtn}"
-                                Background="#263147"
-                                Foreground="#E2E8F0"
-                                Padding="9,3"
-                                Content="📋 Chép"
-                                ToolTip="Sao chép bản dịch vào Clipboard"
-                                Click="BtnCopy_Click"/>
-
-                        <Button x:Name="BtnReplace"
-                                DockPanel.Dock="Right"
-                                Style="{StaticResource IconBtn}"
-                                Background="#1E3A5F"
-                                Foreground="#93C5FD"
-                                Padding="9,3"
-                                Margin="0,0,5,0"
-                                Content="⏎ Thay thế"
-                                ToolTip="Thay thế trực tiếp đoạn đang bôi đen trong ứng dụng gốc bằng bản dịch"
-                                Click="BtnReplace_Click"/>
-                    </DockPanel>
-                </Border>
             </Grid>
         </Border>
     </Grid>
