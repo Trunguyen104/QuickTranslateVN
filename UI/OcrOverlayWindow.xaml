@@ -1,0 +1,31 @@
+<Window x:Class="QuickTranslateVN.UI.OcrOverlayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="#44000000"
+        Topmost="True"
+        ShowInTaskbar="False"
+        Cursor="Cross"
+        KeyDown="Window_KeyDown"
+        MouseLeftButtonDown="Canvas_MouseLeftButtonDown"
+        MouseMove="Canvas_MouseMove"
+        MouseLeftButtonUp="Canvas_MouseLeftButtonUp">
+    <Canvas x:Name="OverlayCanvas">
+        <Border Canvas.Left="24" Canvas.Top="24"
+                Background="#DD181B23"
+                BorderBrush="#3B82F6"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="14,8">
+            <TextBlock Foreground="White" FontSize="13" FontFamily="Segoe UI Semibold"
+                       Text="🔍 Kéo chuột khoanh vùng chữ trên ảnh / PDF cần dịch (Nhấn ESC hoặc Chuột phải để hủy)"/>
+        </Border>
+
+        <Rectangle x:Name="SelectionRect"
+                   Stroke="#3B82F6"
+                   StrokeThickness="2"
+                   Fill="#223B82F6"
+                   Visibility="Collapsed"/>
+    </Canvas>
+</Window>

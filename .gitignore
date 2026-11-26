@@ -1,0 +1,27 @@
+## Visual Studio / .NET / Rider build outputs
+[Bb]in/
+[Oo]bj/
+[Dd]ist/
+[Pp]ublish/
+[Ll]og/
+[Ll]ogs/
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## OS / Temp files
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.tmp
+*.bak
+*.swp
