@@ -49,6 +49,17 @@ Chạy trực tiếp `./dist/QuickTranslateVN.exe` (yêu cầu máy có sẵn [.
 
 ---
 
+## 🌍 Trang Chủ Giới Thiệu (GitHub Pages)
+
+Thư mục [`docs/`](docs/index.html) chứa trang Landing Page giới thiệu công cụ kèm **Demo tương tác bôi đen dịch trực tiếp ngay trên trình duyệt** (hỗ trợ song ngữ `VI / EN`).
+
+Để bật trang web sau khi push lên GitHub:
+1. Vào **Settings → Pages** trên repository GitHub của bạn.
+2. Tại mục **Build and deployment → Source**, chọn **GitHub Actions** (hoặc chọn **Deploy from a branch** → nhánh `main` → thư mục `/docs`).
+3. Website sẽ tự động xuất bản tại `https://<username>.github.io/<repo-name>/`.
+
+---
+
 ## 🔒 Quyền Riêng Tư & Giấy Phép
 
 - Xem chi tiết chính sách bảo mật tại [PRIVACY.md](PRIVACY.md) (0% Telemetry, không lưu lịch sử, không đọc lén bàn phím).
