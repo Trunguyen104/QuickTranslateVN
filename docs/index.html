@@ -4,15 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QuickTranslateVN — Dịch Nhanh Toàn Hệ Thống Siêu Nhẹ Cho Windows</title>
-  <meta name="description" content="Công cụ dịch văn bản đang chọn tức thì trên mọi ứng dụng Windows (Word, Excel, PDF, Chrome, VS Code). Siêu nhẹ 228 KB, ~5 MB RAM, không chiếm focus, mã nguồn mở MIT." />
+  <meta name="description" content="Công cụ dịch văn bản đang chọn tức thì trên mọi ứng dụng Windows (Word, Excel, PDF, Chrome, VS Code). Siêu nhẹ ~230 KB, ~5 MB RAM, không chiếm focus, mã nguồn mở MIT." />
   <meta property="og:title" content="QuickTranslateVN — System-wide Instant Translator for Windows" />
-  <meta property="og:description" content="Bôi đen văn bản ở bất kỳ ứng dụng Windows nào để dịch tức thì như Google Translate Extension & DeepL. Chỉ 228 KB, ~5 MB RAM." />
+  <meta property="og:description" content="Bôi đen văn bản ở bất kỳ ứng dụng Windows nào để dịch tức thì như Google Translate Extension & DeepL. Tối giản, siêu nhẹ, không ngốn RAM." />
   <meta property="og:type" content="website" />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%232563EB'/%3E%3Cstop offset='100%25' stop-color='%234F46E5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='18' fill='url(%23g)'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Segoe UI, sans-serif' font-weight='700' font-size='26'%3EVN%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='4' width='56' height='56' rx='16' fill='%23FFFFFF' stroke='%232563EB' stroke-width='4'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' fill='%232563EB' font-family='Segoe UI, sans-serif' font-weight='700' font-size='25'%3EVN%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-  <!-- Subtle Ambient Glow -->
+  <!-- Soft Pastel Daylight Glow -->
   <div class="bg-glow bg-glow-1" aria-hidden="true"></div>
   <div class="bg-glow bg-glow-2" aria-hidden="true"></div>
 
@@ -22,7 +22,7 @@
       <a href="#" class="brand">
         <span class="brand-logo">VN</span>
         <span class="brand-name">QuickTranslateVN</span>
-        <span class="version-pill">v2.0</span>
+        <span class="version-pill">v2.1</span>
       </a>
 
       <nav class="nav-links">
@@ -33,11 +33,11 @@
       </nav>
 
       <div class="nav-actions">
-        <button id="langToggle" class="btn-ghost btn-sm" type="button" title="Switch Language">
+        <button id="langToggle" class="btn-ghost" type="button" title="Switch Language">
           EN / VI
         </button>
-        <a id="navGithubLink" href="https://github.com" target="_blank" rel="noopener" class="btn-outline btn-sm">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.09 3.29 9.4 7.86 10.92.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.05 11.05 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.26 5.67.41.36.78 1.06.78 2.14 0 1.55-.01 2.79-.01 3.17 0 .31.21.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/></svg>
+        <a id="navGithubLink" href="https://github.com" target="_blank" rel="noopener" class="btn-outline">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.09 3.29 9.4 7.86 10.92.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.05 11.05 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.26 5.67.41.36.78 1.06.78 2.14 0 1.55-.01 2.79-.01 3.17 0 .31.21.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/></svg>
           <span>GitHub</span>
         </a>
       </div>
@@ -54,16 +54,16 @@
 
       <h1 class="hero-title" data-i18n="hero_title">
         Dịch tức thì trên mọi ứng dụng Windows.<br />
-        <span class="gradient-text">Siêu nhẹ 228 KB. Không chiếm Focus.</span>
+        <span class="gradient-text">Tối giản. Siêu nhẹ. Không chiếm Focus.</span>
       </h1>
 
       <p class="hero-subtitle" data-i18n="hero_desc">
-        Mang trải nghiệm mượt mà của Google Translate Extension và DeepL Desktop ra toàn hệ điều hành: Word, Excel, PDF, VS Code, trình duyệt. Bôi đen là dịch — không cài đặt rườm rà, không ngốn RAM.
+        Mang trải nghiệm gọn gàng của Google Translate Extension và DeepL Desktop ra toàn hệ điều hành: Word, Excel, PDF, VS Code, trình duyệt. Bôi đen là dịch — không cài đặt phức tạp, không ngốn RAM.
       </p>
 
       <div class="hero-cta">
         <a id="downloadBtn" href="#install" class="btn-primary">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           <span data-i18n="cta_download">Tải xuống cho Windows (.exe)</span>
         </a>
         <a id="heroGithubBtn" href="#install" class="btn-secondary">
@@ -74,7 +74,7 @@
       <!-- Metrics Strip -->
       <div class="stats-grid">
         <div class="stat-card">
-          <div class="stat-value">228 KB</div>
+          <div class="stat-value">~230 KB</div>
           <div class="stat-label" data-i18n="stat_size">Kích thước file .exe</div>
         </div>
         <div class="stat-card">
@@ -97,24 +97,24 @@
       <div class="section-header">
         <h2 data-i18n="demo_heading">Trải nghiệm trực tiếp ngay tại đây</h2>
         <p data-i18n="demo_sub">
-          Hãy dùng chuột <strong>kéo bôi đen bất kỳ từ hoặc câu nào</strong> trong cửa sổ mô phỏng bên dưới (hoặc bấm các nút chọn nhanh) để xem nút nổi <code>[文A]</code> và Popup hoạt động như thế nào!
+          Dùng chuột <strong>kéo bôi đen bất kỳ từ hoặc câu nào</strong> trong trang tài liệu mẫu bên dưới (hoặc bấm nút chọn nhanh) để cảm nhận sự gọn nhẹ của nút <code>[文A]</code> và Popup trắng tinh giản.
         </p>
       </div>
 
-      <div class="demo-Presets">
+      <div class="demo-presets">
         <span class="preset-hint" data-i18n="demo_try">Thử nhanh:</span>
-        <button type="button" class="chip-btn" data-sample="0" data-i18n="sample_btn_1">📄 Câu tài liệu PDF tiếng Anh</button>
-        <button type="button" class="chip-btn" data-sample="1" data-i18n="sample_btn_2">🔤 Tra từ vựng "resilient"</button>
-        <button type="button" class="chip-btn" data-sample="2" data-i18n="sample_btn_3">✉️ Viết câu tiếng Việt &amp; Thay thế</button>
+        <button type="button" class="chip-btn" data-sample="0" data-i18n="sample_btn_1">Câu tài liệu PDF tiếng Anh</button>
+        <button type="button" class="chip-btn" data-sample="1" data-i18n="sample_btn_2">Tra từ vựng "resilient"</button>
+        <button type="button" class="chip-btn" data-sample="2" data-i18n="sample_btn_3">Viết câu tiếng Việt &amp; Thay thế</button>
       </div>
 
-      <!-- Simulated Windows App Workspace -->
+      <!-- Simulated Clean White Windows Document -->
       <div class="desktop-stage" id="desktopStage">
         <div class="mock-window">
           <div class="mock-titlebar">
             <div class="mock-app-info">
               <span class="app-dot"></span>
-              <span>Architecture_Whitepaper.pdf — Windows Desktop</span>
+              <span>Architecture_Overview.pdf — Windows 11</span>
             </div>
             <div class="win-controls">
               <span>─</span><span>▢</span><span>✕</span>
@@ -122,7 +122,7 @@
           </div>
 
           <div class="mock-body" id="selectableArea">
-            <p class="doc-tag">ABSTRACT — SYSTEM ARCHITECTURE</p>
+            <p class="doc-tag">ABSTRACT — MINIMALIST DESKTOP TOOL</p>
             <p id="samplePara0" class="selectable-text">
               System-wide instant translation works seamlessly across Word, Excel, PDF readers, and code editors without stealing keyboard focus from your active window.
             </p>
@@ -130,64 +130,81 @@
               A <span id="wordResilient" class="highlight-word">resilient</span> architecture uses Windows UI Automation first and falls back to safe clipboard restoration without polluting your Win+V history.
             </p>
             <div class="editor-box">
-              <label data-i18n="editor_label">💬 Ô soạn thảo thử tính năng ⏎ Thay thế trực tiếp (Email / Slack / Word):</label>
+              <label data-i18n="editor_label">Ô soạn thảo thử tính năng Thay thế trực tiếp (Email / Slack / Word):</label>
               <textarea id="sampleInput2" rows="2">Chào bạn, tôi xin gửi báo cáo tiến độ dự án tuần này để đội ngũ xem xét.</textarea>
             </div>
           </div>
         </div>
 
-        <!-- Simulated [文A] Floating Badge -->
+        <!-- Exact White Replica of [文A] Floating Badge -->
         <button id="simBadge" type="button" class="sim-badge hidden" title="Dịch nhanh (Alt+Q)">
           文A
         </button>
 
-        <!-- Simulated QuickTranslateVN Popup -->
+        <!-- Exact White Replica of QuickTranslateVN Popup (Matching Vector Icons & Thin Scrollbar) -->
         <div id="simPopup" class="sim-popup hidden" role="dialog" aria-label="Translation Popup">
           <div class="sim-popup-header">
             <div class="sim-header-left">
-              <button id="simSwapBtn" type="button" class="sim-lang-pill" title="Đảo chiều ngôn ngữ">
-                EN → VI ⇄
+              <button id="simSwapBtn" type="button" class="sim-lang-pill" title="Đảo chiều ngôn ngữ (VI ↔ EN)">
+                EN → VI &nbsp;⇄
               </button>
-              <span id="simLatency" class="sim-latency">128ms</span>
+              <span id="simLatency" class="sim-latency">118ms</span>
             </div>
             <div class="sim-header-actions">
-              <button id="simSpeakBtn" type="button" class="sim-icon-btn" title="Nghe phát âm">🔊</button>
-              <button id="simReplaceBtn" type="button" class="sim-icon-btn" title="Thay thế trực tiếp vào ô đang soạn">⏎</button>
-              <button id="simCopyBtn" type="button" class="sim-icon-btn" title="Sao chép bản dịch">📋</button>
-              <button id="simPinBtn" type="button" class="sim-icon-btn" title="Ghim cửa sổ">📌</button>
-              <button id="simCloseBtn" type="button" class="sim-icon-btn" title="Đóng (ESC)">✕</button>
+              <!-- Speak SVG -->
+              <button id="simSpeakBtn" type="button" class="sim-icon-btn" title="Nghe phát âm">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5.5H4.8L8.2 2.8V11.2L4.8 8.5H2Z"/><path d="M10.2 4.8C11.2 5.8 11.2 8.2 10.2 9.2"/><path d="M11.8 3.2C13.5 5 13.5 9 11.8 10.8"/></svg>
+              </button>
+              <!-- Replace SVG -->
+              <button id="simReplaceBtn" type="button" class="sim-icon-btn" title="Thay thế trực tiếp vào ô đang soạn">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11.5 3.5V8.5C11.5 9.3 10.8 10 10 10H3"/><path d="M5.8 7.2L2.8 10L5.8 12.8"/></svg>
+              </button>
+              <!-- Copy SVG -->
+              <button id="simCopyBtn" type="button" class="sim-icon-btn" title="Sao chép bản dịch">
+                <svg id="svgCopyNormal" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4.5" width="8.5" height="8.5" rx="1.2"/><path d="M2.5 9.5H2C1.5 9.5 1.5 9 1.5 8.5V2.5C1.5 2 2 1.5 2.5 1.5H8.5C9 1.5 9.5 2 9.5 2.5V3"/></svg>
+                <svg id="svgCopyDone" class="hidden" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7.5L5.8 10.8L12 3.5"/></svg>
+              </button>
+              <!-- Pin SVG -->
+              <button id="simPinBtn" type="button" class="sim-icon-btn" title="Ghim cửa sổ">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2H9V6L11 8V9.5H3V8L5 6Z"/><path d="M7 9.5V13.5"/></svg>
+              </button>
+              <!-- Close SVG -->
+              <button id="simCloseBtn" type="button" class="sim-icon-btn" title="Đóng (ESC)">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 3L11 11M11 3L3 11"/></svg>
+              </button>
             </div>
           </div>
           <div class="sim-popup-body">
             <div id="simPhonetic" class="sim-phonetic hidden"></div>
             <div id="simTranslated" class="sim-translated-text"></div>
+            <div id="simDictDivider" class="sim-dict-divider hidden"></div>
             <div id="simDict" class="sim-dict hidden"></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 3 Trigger Modes + Popup Features -->
+    <!-- Features Section -->
     <section id="features" class="features-section container">
       <div class="section-header">
-        <h2 data-i18n="feat_heading">Tối giản tuyệt đối. Chỉ giữ lại những gì tiện nhất.</h2>
-        <p data-i18n="feat_sub">Không bảng điều khiển rườm rà. Cài chạy ngầm ở System Tray và sẵn sàng mọi lúc bạn cần.</p>
+        <h2 data-i18n="feat_heading">Tối giản tuyệt đối. Thân thiện ngay lần đầu mở.</h2>
+        <p data-i18n="feat_sub">Không menu cài đặt phức tạp. Nằm gọn dưới System Tray và xuất hiện đúng lúc bạn cần.</p>
       </div>
 
       <div class="cards-grid">
         <article class="feature-card">
-          <div class="card-icon">🖱️</div>
+          <div class="card-icon">文A</div>
           <h3 data-i18n="f1_title">Nút nổi [文A] thông minh</h3>
           <p data-i18n="f1_desc">
-            Nhận diện con trỏ văn bản <code>IDC_IBEAM</code> của Windows: chỉ hiện nút dịch nhỏ cạnh chuột khi bạn thực sự bôi đen chữ — không bao giờ làm phiền khi kéo file hay thanh cuộn.
+            Nhận diện con trỏ văn bản <code>IDC_IBEAM</code> của Windows: chỉ hiện nút dịch nhỏ cạnh chuột khi bạn thực sự bôi đen chữ — không làm phiền khi kéo file hay thanh cuộn.
           </p>
         </article>
 
         <article class="feature-card">
-          <div class="card-icon">⚡</div>
+          <div class="card-icon">Alt</div>
           <h3 data-i18n="f2_title">Alt + Q &amp; Ctrl + C + C</h3>
           <p data-i18n="f2_desc">
-            Yêu thích tốc độ bàn phím? Bôi đen rồi nhấn <code>Alt + Q</code> hoặc nhấn đúp <code>Ctrl + C</code> hai lần (kiểu DeepL Desktop) để bung thẳng bản dịch trong chớp mắt.
+            Thích thao tác bàn phím nhanh? Bôi đen rồi nhấn <code>Alt + Q</code> hoặc nhấn đúp <code>Ctrl + C</code> hai lần (kiểu DeepL Desktop) để hiện ngay bản dịch.
           </p>
         </article>
 
@@ -195,31 +212,31 @@
           <div class="card-icon">⏎</div>
           <h3 data-i18n="f3_title">Thay thế văn bản tại chỗ</h3>
           <p data-i18n="f3_desc">
-            Đang gõ tiếng Việt trong Slack, Gmail, Word hay VS Code? Bôi đen câu vừa viết → dịch sang tiếng Anh → bấm <code>⏎</code> để thay thế ngay vào vị trí con trỏ.
+            Đang gõ tiếng Việt trong Slack, Gmail, Word hay VS Code? Bôi đen câu vừa viết → dịch sang tiếng Anh → bấm nút Thay thế để điền thẳng vào vị trí con trỏ.
           </p>
         </article>
 
         <article class="feature-card">
-          <div class="card-icon">📖</div>
+          <div class="card-icon">⇄</div>
           <h3 data-i18n="f4_title">Từ điển, Phiên âm &amp; Đảo chiều</h3>
           <p data-i18n="f4_desc">
-            Tự động phát hiện tiếng Anh ↔ tiếng Việt để dịch chiều ngược lại. Khi bôi đen từ lẻ, tự động hiển thị phiên âm quốc tế <code>/phonetic/</code>, từ loại và nút phát âm <code>🔊</code>.
+            Tự động phát hiện tiếng Anh ↔ tiếng Việt. Khi bôi đen từ lẻ, tự động hiển thị phiên âm quốc tế <code>/phonetic/</code>, nghĩa theo từ loại và nút nghe phát âm.
           </p>
         </article>
 
         <article class="feature-card">
-          <div class="card-icon">📑</div>
+          <div class="card-icon">PDF</div>
           <h3 data-i18n="f5_title">Tự nối dòng gãy từ PDF</h3>
           <p data-i18n="f5_desc">
-            Đọc paper và sách PDF tiếng Anh không còn cảnh câu dịch bị đứt gãy vô nghĩa nhờ bộ lọc tự động khử dấu gạch nối cuối hàng và ngắt dòng cứng.
+            Đọc tài liệu và báo cáo PDF tiếng Anh dễ dàng hơn nhờ bộ lọc tự động khử dấu gạch nối cuối hàng và nối lại các câu bị ngắt dòng cứng.
           </p>
         </article>
 
         <article class="feature-card">
-          <div class="card-icon">🪶</div>
+          <div class="card-icon">UI</div>
           <h3 data-i18n="f6_title">Không bao giờ cướp Focus</h3>
           <p data-i18n="f6_desc">
-            Sử dụng cờ cửa sổ gốc <code>WS_EX_NOACTIVATE</code> và chuẩn <code>PerMonitorV2</code> DPI: vùng bôi đen trong Word/Chrome được giữ nguyên, gõ phím tiếp tục ngay lập tức.
+            Áp dụng cờ cửa sổ <code>WS_EX_NOACTIVATE</code> và chuẩn <code>PerMonitorV2</code> DPI: vùng đang bôi đen trong Word/Chrome được giữ nguyên để bạn làm việc liền mạch.
           </p>
         </article>
       </div>
@@ -232,31 +249,31 @@
           <span class="eyebrow" data-i18n="arch_eyebrow">KIẾN TRÚC KỸ THUẬT</span>
           <h2 data-i18n="arch_title">Lấy văn bản trên mọi ứng dụng mà không làm bẩn Clipboard</h2>
           <p data-i18n="arch_desc">
-            Trên Windows, mỗi ứng dụng render văn bản theo một cách khác nhau. QuickTranslateVN kết hợp chuỗi <strong>Fallback Cascade</strong> trên một luồng STA duy nhất:
+            Mỗi ứng dụng Windows hiển thị văn bản theo cơ chế riêng. QuickTranslateVN vận hành chuỗi <strong>Fallback Cascade</strong> trên một luồng nền duy nhất:
           </p>
           <ul class="arch-list">
             <li data-i18n="arch_step1"><strong>Tầng 1 — Windows UI Automation:</strong> Đọc trực tiếp qua <code>TextPattern</code> (Word, Notepad, WPF) và <code>ValuePattern</code> (ô Excel) trong &lt;15ms mà không chạm vào Clipboard.</li>
             <li data-i18n="arch_step2"><strong>Tầng 2 — Terminal Safety Guard:</strong> Tự động nhận diện <code>cmd</code>, <code>PowerShell</code>, <code>Windows Terminal</code> để không bao giờ gửi nhầm tín hiệu ngắt <code>Ctrl+C</code>.</li>
-            <li data-i18n="arch_step3"><strong>Tầng 3 — Safe Clipboard Restoration:</strong> Với trình duyệt và Electron/VS Code, sao lưu đa định dạng dữ liệu cũ của bạn và khôi phục ngay sau ~25ms kèm cờ <code>ExcludeClipboardContentFromMonitorProcessing</code> để lịch sử <code>Win + V</code> luôn sạch sẽ.</li>
+            <li data-i18n="arch_step3"><strong>Tầng 3 — Safe Clipboard Restoration:</strong> Với trình duyệt và VS Code, sao lưu dữ liệu cũ của bạn và khôi phục ngay sau ~25ms kèm cờ <code>ExcludeClipboardContentFromMonitorProcessing</code> để lịch sử <code>Win + V</code> luôn sạch sẽ.</li>
           </ul>
         </div>
 
         <div class="arch-compare">
-          <h3 data-i18n="cmp_title">So sánh độ gọn nhẹ</h3>
+          <h3 data-i18n="cmp_title">So sánh mức tiêu thụ tài nguyên</h3>
           <div class="compare-table-wrap">
             <table class="compare-table">
               <thead>
                 <tr>
                   <th data-i18n="cmp_col_tool">Công cụ</th>
-                  <th data-i18n="cmp_col_size">Bộ cài / File</th>
+                  <th data-i18n="cmp_col_size">Dung lượng</th>
                   <th data-i18n="cmp_col_ram">RAM chạy nền</th>
-                  <th data-i18n="cmp_col_oss">Mã nguồn</th>
+                  <th data-i18n="cmp_col_oss">Giấy phép</th>
                 </tr>
               </thead>
               <tbody>
                 <tr class="highlight-row">
                   <td><strong>QuickTranslateVN</strong></td>
-                  <td><strong>228 KB</strong></td>
+                  <td><strong>~230 KB</strong></td>
                   <td><strong>~5 – 25 MB</strong></td>
                   <td>MIT (0 NuGet)</td>
                 </tr>
@@ -270,7 +287,7 @@
                   <td>DeepL Desktop</td>
                   <td>~120 MB</td>
                   <td>150 – 280 MB</td>
-                  <td>Đóng (Thương mại)</td>
+                  <td>Thương mại</td>
                 </tr>
                 <tr>
                   <td>App Python đóng gói</td>
@@ -288,11 +305,13 @@
     <!-- Privacy Section -->
     <section id="privacy" class="privacy-section container">
       <div class="privacy-banner">
-        <div class="privacy-icon">🔒</div>
+        <div class="privacy-badge-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        </div>
         <div>
           <h2 data-i18n="priv_title">Cam kết Quyền riêng tư &amp; Bảo mật 100% minh bạch</h2>
           <p data-i18n="priv_desc">
-            <strong>Không Telemetry • Không lưu lịch sử • Không đọc lén bàn phím ngầm.</strong> Ứng dụng chỉ đọc đúng đoạn văn bản tại thời điểm bạn chủ động bấm dịch và kết nối HTTPS trực tiếp tới dịch vụ dịch mà không đi qua bất kỳ máy chủ trung gian nào. Toàn bộ mã nguồn C# ngắn gọn, dễ kiểm chứng trong vài phút.
+            <strong>Không Telemetry • Không lưu lịch sử • Không đọc lén bàn phím ngầm.</strong> Ứng dụng chỉ đọc đúng đoạn văn bản tại thời điểm bạn chủ động bấm dịch và kết nối HTTPS trực tiếp tới dịch vụ dịch mà không đi qua bất kỳ máy chủ trung gian nào.
           </p>
         </div>
       </div>
@@ -302,25 +321,29 @@
     <section id="install" class="install-section container">
       <div class="section-header">
         <h2 data-i18n="inst_title">Sẵn sàng sử dụng trong 10 giây</h2>
-        <p data-i18n="inst_sub">Tải trực tiếp bản biên dịch sẵn hoặc tự đóng gói từ mã nguồn với .NET 8.</p>
+        <p data-i18n="inst_sub">Tải trực tiếp file thực thi siêu nhẹ hoặc tự biên dịch từ mã nguồn sạch.</p>
       </div>
 
       <div class="install-grid">
         <div class="install-card">
-          <div class="step-num">Cách 1</div>
-          <h3 data-i18n="inst_c1_title">Tải bản chạy ngay (.exe)</h3>
-          <p data-i18n="inst_c1_desc">
-            Tải file <code>QuickTranslateVN.exe</code> (228 KB) từ mục GitHub Releases và mở lên. Biểu tượng <strong>VN</strong> màu xanh sẽ nằm gọn ở góc phải thanh Taskbar.
-          </p>
+          <div>
+            <div class="step-num">Cách 1</div>
+            <h3 data-i18n="inst_c1_title">Tải bản chạy ngay (.exe)</h3>
+            <p data-i18n="inst_c1_desc">
+              Tải file <code>QuickTranslateVN.exe</code> (~230 KB) từ mục GitHub Releases và mở lên. Biểu tượng <strong>VN</strong> nền trắng viền xanh sẽ nằm gọn ở góc phải thanh Taskbar.
+            </p>
+          </div>
           <a id="releaseCardBtn" href="https://github.com" target="_blank" rel="noopener" class="btn-primary btn-full">
             <span data-i18n="inst_c1_btn">Mở trang GitHub Releases</span>
           </a>
         </div>
 
         <div class="install-card">
-          <div class="step-num">Cách 2</div>
-          <h3 data-i18n="inst_c2_title">Tự biên dịch từ mã nguồn</h3>
-          <p data-i18n="inst_c2_desc">Yêu cầu máy có .NET 8 SDK. Sao chép và chạy lệnh PowerShell sau:</p>
+          <div>
+            <div class="step-num">Cách 2</div>
+            <h3 data-i18n="inst_c2_title">Tự biên dịch từ mã nguồn</h3>
+            <p data-i18n="inst_c2_desc">Yêu cầu máy có .NET 8 SDK. Sao chép và chạy lệnh PowerShell sau:</p>
+          </div>
           <div class="code-block">
             <button id="copyCmdBtn" type="button" class="copy-code-btn">Copy</button>
             <pre><code id="buildCmdText">git clone https://github.com/YOUR_USERNAME/QuickTranslateVN.git

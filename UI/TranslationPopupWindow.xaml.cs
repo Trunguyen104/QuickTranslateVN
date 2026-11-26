@@ -9,13 +9,16 @@ namespace QuickTranslateVN.UI;
 
 public partial class TranslationPopupWindow : Window
 {
-    private static readonly SolidColorBrush BrushTextReady = FreezeBrush("#F8FAFC");
-    private static readonly SolidColorBrush BrushTextLoading = FreezeBrush("#94A3B8");
-    private static readonly SolidColorBrush BrushTextError = FreezeBrush("#FCA5A5");
-    private static readonly SolidColorBrush BrushPosBg = FreezeBrush("#1E3A5F");
-    private static readonly SolidColorBrush BrushPosFg = FreezeBrush("#93C5FD");
-    private static readonly SolidColorBrush BrushMeanings = FreezeBrush("#CBD5E1");
-    private static readonly SolidColorBrush BrushPinned = FreezeBrush("#1D4ED8");
+    private static readonly SolidColorBrush BrushTextReady = FreezeBrush("#0F172A");
+    private static readonly SolidColorBrush BrushTextLoading = FreezeBrush("#64748B");
+    private static readonly SolidColorBrush BrushTextError = FreezeBrush("#DC2626");
+    private static readonly SolidColorBrush BrushPosBg = FreezeBrush("#EFF6FF");
+    private static readonly SolidColorBrush BrushPosBorder = FreezeBrush("#BFDBFE");
+    private static readonly SolidColorBrush BrushPosFg = FreezeBrush("#2563EB");
+    private static readonly SolidColorBrush BrushMeanings = FreezeBrush("#334155");
+    private static readonly SolidColorBrush BrushPinnedBg = FreezeBrush("#DBEAFE");
+    private static readonly SolidColorBrush BrushPinnedFg = FreezeBrush("#2563EB");
+    private static readonly SolidColorBrush BrushIconDefaultFg = FreezeBrush("#64748B");
 
     private readonly TranslationService _translationService;
     private readonly TextCaptureService _captureService;
@@ -70,10 +73,12 @@ public partial class TranslationPopupWindow : Window
         TxtTranslated.Foreground = BrushTextLoading;
         TxtTranslated.Text = "Đang dịch...";
         TxtPhonetic.Visibility = Visibility.Collapsed;
+        DictDivider.Visibility = Visibility.Collapsed;
         PanelDictionary.Visibility = Visibility.Collapsed;
         PanelDictionary.Children.Clear();
         TxtSpeed.Text = string.Empty;
-        BtnCopy.Content = "📋";
+        IconCopyNormal.Visibility = Visibility.Visible;
+        IconCopyDone.Visibility = Visibility.Collapsed;
 
         if (reposition)
         {
@@ -90,7 +95,7 @@ public partial class TranslationPopupWindow : Window
             _currentSourceLang = result.SourceLang;
             _currentTargetLang = result.TargetLang;
 
-            TxtLangBadge.Text = $"{result.SourceLang.ToUpperInvariant()} → {result.TargetLang.ToUpperInvariant()} ⇄";
+            TxtLangBadge.Text = $"{result.SourceLang.ToUpperInvariant()} → {result.TargetLang.ToUpperInvariant()}  ⇄";
             TxtSpeed.Text = result.ElapsedMs > 0 ? $"{result.ElapsedMs}ms" : "cache";
 
             TxtTranslated.Foreground = BrushTextReady;
@@ -105,6 +110,7 @@ public partial class TranslationPopupWindow : Window
             if (result.DictionaryEntries.Count > 0)
             {
                 RenderDictionaryEntries(result.DictionaryEntries);
+                DictDivider.Visibility = Visibility.Visible;
                 PanelDictionary.Visibility = Visibility.Visible;
             }
 
@@ -133,6 +139,8 @@ public partial class TranslationPopupWindow : Window
                 row.Children.Add(new Border
                 {
                     Background = BrushPosBg,
+                    BorderBrush = BrushPosBorder,
+                    BorderThickness = new Thickness(1),
                     CornerRadius = new CornerRadius(4),
                     Padding = new Thickness(5, 1, 5, 1),
                     Margin = new Thickness(0, 0, 6, 2),
@@ -140,7 +148,8 @@ public partial class TranslationPopupWindow : Window
                     {
                         Text = entry.PartOfSpeech,
                         Foreground = BrushPosFg,
-                        FontSize = 11
+                        FontFamily = new System.Windows.Media.FontFamily("Segoe UI Semibold"),
+                        FontSize = 10.5
                     }
                 });
             }
@@ -201,9 +210,11 @@ public partial class TranslationPopupWindow : Window
         try
         {
             System.Windows.Clipboard.SetText(_currentTranslated);
-            BtnCopy.Content = "✓";
+            IconCopyNormal.Visibility = Visibility.Collapsed;
+            IconCopyDone.Visibility = Visibility.Visible;
             await Task.Delay(1000);
-            BtnCopy.Content = "📋";
+            IconCopyDone.Visibility = Visibility.Collapsed;
+            IconCopyNormal.Visibility = Visibility.Visible;
         }
         catch { }
     }
@@ -211,8 +222,8 @@ public partial class TranslationPopupWindow : Window
     private void BtnPin_Click(object sender, RoutedEventArgs e)
     {
         IsPinned = !IsPinned;
-        BtnPin.Opacity = IsPinned ? 1.0 : 0.55;
-        BtnPin.Background = IsPinned ? BrushPinned : System.Windows.Media.Brushes.Transparent;
+        BtnPin.Background = IsPinned ? BrushPinnedBg : System.Windows.Media.Brushes.Transparent;
+        BtnPin.Foreground = IsPinned ? BrushPinnedFg : BrushIconDefaultFg;
     }
 
     private void BtnClose_Click(object sender, RoutedEventArgs e) => ForceDismiss();

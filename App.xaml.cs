@@ -130,12 +130,21 @@ public partial class App : System.Windows.Application
     private void InitializeSystemTray()
     {
         _generatedIcon = CreateTrayIcon();
-        var menu = new ContextMenuStrip();
+        var menu = new ContextMenuStrip
+        {
+            Renderer = new ToolStripProfessionalRenderer(new CleanWhiteMenuColors()),
+            BackColor = Color.White,
+            ForeColor = Color.FromArgb(15, 23, 42),
+            Font = new Font("Segoe UI", 9.25f),
+            ShowImageMargin = true,
+            Padding = new Padding(4)
+        };
 
         var badgeToggle = new ToolStripMenuItem("Hiện nút [文A] khi bôi đen chuột")
         {
             Checked = _settings.ShowFloatingBadgeOnSelect,
-            CheckOnClick = true
+            CheckOnClick = true,
+            Padding = new Padding(2, 4, 6, 4)
         };
         badgeToggle.Click += (_, _) =>
         {
@@ -148,7 +157,8 @@ public partial class App : System.Windows.Application
         var dblCopyToggle = new ToolStripMenuItem("Dịch khi nhấn đúp Ctrl + C + C")
         {
             Checked = _settings.EnableDoubleCtrlC,
-            CheckOnClick = true
+            CheckOnClick = true,
+            Padding = new Padding(2, 4, 6, 4)
         };
         dblCopyToggle.Click += (_, _) =>
         {
@@ -161,14 +171,18 @@ public partial class App : System.Windows.Application
         var startupToggle = new ToolStripMenuItem("Khởi động cùng Windows")
         {
             Checked = AppSettings.IsStartupEnabled(),
-            CheckOnClick = true
+            CheckOnClick = true,
+            Padding = new Padding(2, 4, 6, 4)
         };
         startupToggle.Click += (_, _) => AppSettings.SetStartupEnabled(startupToggle.Checked);
         menu.Items.Add(startupToggle);
 
         menu.Items.Add(new ToolStripSeparator());
 
-        var exitItem = new ToolStripMenuItem("Thoát");
+        var exitItem = new ToolStripMenuItem("Thoát")
+        {
+            Padding = new Padding(2, 4, 6, 4)
+        };
         exitItem.Click += (_, _) => Shutdown();
         menu.Items.Add(exitItem);
 
@@ -181,6 +195,24 @@ public partial class App : System.Windows.Application
         };
     }
 
+    private sealed class CleanWhiteMenuColors : ProfessionalColorTable
+    {
+        public CleanWhiteMenuColors() => UseSystemColors = false;
+        public override Color ToolStripDropDownBackground => Color.White;
+        public override Color ImageMarginGradientBegin => Color.White;
+        public override Color ImageMarginGradientMiddle => Color.White;
+        public override Color ImageMarginGradientEnd => Color.White;
+        public override Color MenuBorder => Color.FromArgb(226, 232, 240);
+        public override Color MenuItemBorder => Color.FromArgb(191, 219, 254);
+        public override Color MenuItemSelected => Color.FromArgb(239, 246, 255);
+        public override Color MenuItemSelectedGradientBegin => Color.FromArgb(239, 246, 255);
+        public override Color MenuItemSelectedGradientEnd => Color.FromArgb(239, 246, 255);
+        public override Color CheckBackground => Color.FromArgb(239, 246, 255);
+        public override Color CheckSelectedBackground => Color.FromArgb(219, 234, 254);
+        public override Color SeparatorDark => Color.FromArgb(241, 245, 249);
+        public override Color SeparatorLight => Color.White;
+    }
+
     private static Icon CreateTrayIcon()
     {
         using var bmp = new Bitmap(32, 32);
@@ -189,11 +221,8 @@ public partial class App : System.Windows.Application
             g.SmoothingMode = SmoothingMode.AntiAlias;
             g.Clear(Color.Transparent);
 
-            using var brush = new LinearGradientBrush(
-                new Rectangle(2, 2, 28, 28),
-                Color.FromArgb(37, 99, 235),
-                Color.FromArgb(79, 70, 229),
-                45f);
+            using var bgBrush = new SolidBrush(Color.White);
+            using var borderPen = new Pen(Color.FromArgb(37, 99, 235), 2f);
 
             using var path = new GraphicsPath();
             const int r = 10;
@@ -202,12 +231,13 @@ public partial class App : System.Windows.Application
             path.AddArc(30 - r, 30 - r, r, r, 0, 90);
             path.AddArc(2, 30 - r, r, r, 90, 90);
             path.CloseFigure();
-            g.FillPath(brush, path);
+            g.FillPath(bgBrush, path);
+            g.DrawPath(borderPen, path);
 
             using var font = new Font("Segoe UI", 11.5f, System.Drawing.FontStyle.Bold, GraphicsUnit.Pixel);
-            using var whiteBrush = new SolidBrush(Color.White);
+            using var blueBrush = new SolidBrush(Color.FromArgb(37, 99, 235));
             var sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
-            g.DrawString("VN", font, whiteBrush, new RectangleF(1, 2, 30, 28), sf);
+            g.DrawString("VN", font, blueBrush, new RectangleF(1, 2, 30, 28), sf);
         }
 
         return Icon.FromHandle(bmp.GetHicon());

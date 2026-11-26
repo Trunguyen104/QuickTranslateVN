@@ -15,25 +15,52 @@
     <Window.Resources>
         <Style x:Key="IconBtn" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#CBD5E1"/>
+            <Setter Property="Foreground" Value="#64748B"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="6,3"/>
-            <Setter Property="Margin" Value="1.5,0"/>
+            <Setter Property="Width" Value="26"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="Margin" Value="1,0"/>
             <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="FontSize" Value="12"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border x:Name="Bd"
                                 Background="{TemplateBinding Background}"
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#E2E8F0"/>
+                                <Setter Property="Foreground" Value="#0F172A"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="LangPillBtn" TargetType="Button">
+            <Setter Property="Background" Value="#EFF6FF"/>
+            <Setter Property="Foreground" Value="#2563EB"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="8,3"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="#BFDBFE"
+                                BorderThickness="1"
                                 CornerRadius="6"
                                 Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="#334155"/>
-                                <Setter Property="Foreground" Value="#FFFFFF"/>
+                                <Setter TargetName="Bd" Property="Background" Value="#DBEAFE"/>
+                                <Setter Property="Foreground" Value="#1D4ED8"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -42,13 +69,13 @@
         </Style>
     </Window.Resources>
 
-    <Grid Margin="6">
-        <Border Background="#181B23"
-                BorderBrush="#2E3648"
+    <Grid Margin="10">
+        <Border Background="#FFFFFF"
+                BorderBrush="#E2E8F0"
                 BorderThickness="1"
-                CornerRadius="11">
+                CornerRadius="12">
             <Border.Effect>
-                <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.5" Color="#000000"/>
+                <DropShadowEffect BlurRadius="16" ShadowDepth="3" Opacity="0.16" Color="#0F172A"/>
             </Border.Effect>
 
             <Grid>
@@ -57,77 +84,126 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Compact Single-Row Toolbar (Draggable) -->
+                <!-- Clean White/Slate Single-Row Toolbar (Draggable) -->
                 <Border Grid.Row="0"
-                        Background="#202532"
-                        CornerRadius="11,11,0,0"
-                        Padding="8,5"
+                        Background="#F8FAFC"
+                        BorderBrush="#F1F5F9"
+                        BorderThickness="0,0,0,1"
+                        CornerRadius="12,12,0,0"
+                        Padding="8,6"
                         Cursor="SizeAll"
                         MouseLeftButtonDown="Header_MouseLeftButtonDown"
                         MouseMove="Header_MouseMove"
                         MouseLeftButtonUp="Header_MouseLeftButtonUp">
                     <DockPanel LastChildFill="False">
                         <Button DockPanel.Dock="Left"
-                                Style="{StaticResource IconBtn}"
-                                Background="#273248"
-                                Foreground="#60A5FA"
+                                Style="{StaticResource LangPillBtn}"
                                 FontFamily="Segoe UI Semibold"
                                 Click="BtnSwapLang_Click"
                                 ToolTip="Đảo chiều ngôn ngữ (VI ↔ EN)">
-                            <TextBlock x:Name="TxtLangBadge" Text="EN → VI ⇄" FontSize="11.5"/>
+                            <TextBlock x:Name="TxtLangBadge" Text="EN → VI  ⇄" FontSize="11.5"/>
                         </Button>
 
                         <TextBlock x:Name="TxtSpeed"
                                    DockPanel.Dock="Left"
-                                   Foreground="#64748B"
+                                   Foreground="#94A3B8"
                                    FontSize="10.5"
                                    VerticalAlignment="Center"
-                                   Margin="6,0,0,0"/>
+                                   Margin="7,0,0,0"/>
 
+                        <!-- Close (X) -->
                         <Button DockPanel.Dock="Right"
                                 Style="{StaticResource IconBtn}"
-                                Content="✕"
                                 ToolTip="Đóng (ESC)"
-                                Click="BtnClose_Click"/>
+                                Click="BtnClose_Click">
+                            <Path Data="M 3,3 L 11,11 M 11,3 L 3,11"
+                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                  StrokeThickness="1.6"
+                                  StrokeStartLineCap="Round"
+                                  StrokeEndLineCap="Round"
+                                  Width="14" Height="14"/>
+                        </Button>
 
+                        <!-- Pin -->
                         <Button x:Name="BtnPin"
                                 DockPanel.Dock="Right"
                                 Style="{StaticResource IconBtn}"
-                                Content="📌"
-                                Opacity="0.55"
                                 ToolTip="Ghim cửa sổ"
-                                Click="BtnPin_Click"/>
+                                Click="BtnPin_Click">
+                            <Path Data="M 5,2 L 9,2 L 9,6 L 11,8 L 11,9.5 L 3,9.5 L 3,8 L 5,6 Z M 7,9.5 L 7,13.5"
+                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                  StrokeThickness="1.45"
+                                  StrokeLineJoin="Round"
+                                  StrokeStartLineCap="Round"
+                                  StrokeEndLineCap="Round"
+                                  Width="14" Height="14"/>
+                        </Button>
 
+                        <!-- Copy -->
                         <Button x:Name="BtnCopy"
                                 DockPanel.Dock="Right"
                                 Style="{StaticResource IconBtn}"
-                                Content="📋"
                                 ToolTip="Sao chép bản dịch"
-                                Click="BtnCopy_Click"/>
+                                Click="BtnCopy_Click">
+                            <Grid Width="14" Height="14">
+                                <Path x:Name="IconCopyNormal"
+                                      Data="M 5,4.5 L 11.5,4.5 C 12,4.5 12.5,5 12.5,5.5 L 12.5,12 C 12.5,12.5 12,13 11.5,13 L 5,13 C 4.5,13 4,12.5 4,12 L 4,5.5 C 4,5 4.5,4.5 5,4.5 Z M 2.5,9.5 L 2,9.5 C 1.5,9.5 1.5,9 1.5,8.5 L 1.5,2.5 C 1.5,2 2,1.5 2.5,1.5 L 8.5,1.5 C 9,1.5 9.5,2 9.5,2.5 L 9.5,3"
+                                      Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                      StrokeThickness="1.4"
+                                      StrokeLineJoin="Round"
+                                      StrokeStartLineCap="Round"
+                                      StrokeEndLineCap="Round"/>
+                                <Path x:Name="IconCopyDone"
+                                      Visibility="Collapsed"
+                                      Data="M 2.5,7.5 L 5.8,10.8 L 12,3.5"
+                                      Stroke="#16A34A"
+                                      StrokeThickness="1.8"
+                                      StrokeLineJoin="Round"
+                                      StrokeStartLineCap="Round"
+                                      StrokeEndLineCap="Round"/>
+                            </Grid>
+                        </Button>
 
+                        <!-- Replace Selected Text -->
                         <Button x:Name="BtnReplace"
                                 DockPanel.Dock="Right"
                                 Style="{StaticResource IconBtn}"
-                                Content="⏎"
                                 ToolTip="Thay thế trực tiếp đoạn đang chọn bằng bản dịch"
-                                Click="BtnReplace_Click"/>
+                                Click="BtnReplace_Click">
+                            <Path Data="M 11.5,3.5 L 11.5,8.5 C 11.5,9.3 10.8,10 10,10 L 3,10 M 5.8,7.2 L 2.8,10 L 5.8,12.8"
+                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                  StrokeThickness="1.5"
+                                  StrokeLineJoin="Round"
+                                  StrokeStartLineCap="Round"
+                                  StrokeEndLineCap="Round"
+                                  Width="14" Height="14"/>
+                        </Button>
 
+                        <!-- Speak Audio -->
                         <Button DockPanel.Dock="Right"
                                 Style="{StaticResource IconBtn}"
-                                Content="🔊"
-                                ToolTip="Nghe phát âm câu gốc"
-                                Click="BtnSpeak_Click"/>
+                                ToolTip="Nghe phát âm"
+                                Click="BtnSpeak_Click">
+                            <Path Data="M 2,5.5 L 4.8,5.5 L 8.2,2.8 L 8.2,11.2 L 4.8,8.5 L 2,8.5 Z M 10.2,4.8 C 11.2,5.8 11.2,8.2 10.2,9.2 M 11.8,3.2 C 13.5,5 13.5,9 11.8,10.8"
+                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                  StrokeThickness="1.4"
+                                  StrokeLineJoin="Round"
+                                  StrokeStartLineCap="Round"
+                                  StrokeEndLineCap="Round"
+                                  Width="14" Height="14"/>
+                        </Button>
                     </DockPanel>
                 </Border>
 
-                <!-- Minimalist Translation Body -->
+                <!-- Clean White Body with Custom Thin Scrollbar -->
                 <ScrollViewer Grid.Row="1"
                               VerticalScrollBarVisibility="Auto"
-                              MaxHeight="350"
-                              Padding="12,9,12,11">
+                              HorizontalScrollBarVisibility="Disabled"
+                              MaxHeight="340"
+                              Padding="13,10,11,12">
                     <StackPanel>
                         <TextBlock x:Name="TxtPhonetic"
-                                   Foreground="#94A3B8"
+                                   Foreground="#64748B"
                                    FontStyle="Italic"
                                    FontSize="12"
                                    Margin="0,0,0,3"
@@ -135,18 +211,23 @@
 
                         <TextBox x:Name="TxtTranslated"
                                  Text="Đang dịch..."
-                                 Foreground="#F8FAFC"
+                                 Foreground="#0F172A"
                                  Background="Transparent"
                                  BorderThickness="0"
                                  IsReadOnly="True"
                                  TextWrapping="Wrap"
                                  FontFamily="Segoe UI"
                                  FontSize="14.5"
-                                 SelectionBrush="#2563EB"
-                                 Padding="0"/>
+                                 SelectionBrush="#BFDBFE"
+                                 Padding="0,0,4,0"/>
+
+                        <Border x:Name="DictDivider"
+                                Height="1"
+                                Background="#F1F5F9"
+                                Margin="0,8,0,6"
+                                Visibility="Collapsed"/>
 
                         <StackPanel x:Name="PanelDictionary"
-                                    Margin="0,7,0,0"
                                     Visibility="Collapsed"/>
                     </StackPanel>
                 </ScrollViewer>
