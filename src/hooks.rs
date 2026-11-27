@@ -73,8 +73,10 @@ pub fn start_global_hooks(proxy: EventLoopProxy<UserEvent>, switches: Arc<HookSw
 mod win_hooks {
     use super::*;
     use std::cell::RefCell;
+    use std::collections::HashMap;
     use std::mem::{size_of, zeroed};
     use std::ptr::null_mut;
+    use std::sync::{Mutex, OnceLock};
     use std::time::Instant;
     use tao::platform::windows::WindowExtWindows;
     use windows_sys::Win32::Foundation::{HWND, LPARAM, LRESULT, POINT, WPARAM};
@@ -129,6 +131,11 @@ mod win_hooks {
         }
     }
 
+    fn orig_wndprocs() -> &'static Mutex<HashMap<isize, isize>> {
+        static MAP: OnceLock<Mutex<HashMap<isize, isize>>> = OnceLock::new();
+        MAP.get_or_init(|| Mutex::new(HashMap::new()))
+    }
+
     pub fn make_non_activating_win(window: &Window) {
         unsafe {
             let hwnd = window.hwnd() as HWND;
@@ -144,11 +151,9 @@ mod win_hooks {
 
             let orig_proc = GetWindowLongPtrW(hwnd, GWLP_WNDPROC);
             if orig_proc != 0 {
-                SetWindowLongPtrW(
-                    hwnd,
-                    windows_sys::Win32::UI::WindowsAndMessaging::GWLP_USERDATA,
-                    orig_proc,
-                );
+                if let Ok(mut map) = orig_wndprocs().lock() {
+                    map.insert(hwnd as isize, orig_proc);
+                }
                 SetWindowLongPtrW(
                     hwnd,
                     GWLP_WNDPROC,
@@ -167,10 +172,11 @@ mod win_hooks {
         if msg == WM_MOUSEACTIVATE {
             return MA_NOACTIVATE as LRESULT;
         }
-        let orig = GetWindowLongPtrW(
-            hwnd,
-            windows_sys::Win32::UI::WindowsAndMessaging::GWLP_USERDATA,
-        );
+        let orig = orig_wndprocs()
+            .lock()
+            .ok()
+            .and_then(|m| m.get(&(hwnd as isize)).copied())
+            .unwrap_or(0);
         if orig != 0 {
             let proc: unsafe extern "system" fn(HWND, u32, WPARAM, LPARAM) -> LRESULT =
                 std::mem::transmute(orig);

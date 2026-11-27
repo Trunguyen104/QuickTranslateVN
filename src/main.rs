@@ -21,7 +21,7 @@ use tao::event_loop::{ControlFlow, EventLoopBuilder};
 use tao::window::{Window, WindowBuilder};
 use tray_icon::menu::{CheckMenuItem, Menu, MenuEvent, MenuItem, PredefinedMenuItem};
 use tray_icon::TrayIconBuilder;
-use wry::WebViewBuilder;
+use wry::{WebContext, WebViewBuilder};
 
 #[cfg(target_os = "macos")]
 use tao::platform::macos::{ActivationPolicy, EventLoopExtMacOS};
@@ -202,10 +202,17 @@ fn main() {
     let id_startup = item_startup.id().clone();
     let id_quit = item_quit.id().clone();
 
-    // 3. Pre-warmed Floating Badge & Clean White Popup Windows + WebViews
+    // 3. Pre-warmed Floating Badge & Clean White Popup Windows + Shared WebContext in LocalAppData
+    let webview_data_dir = dirs::data_local_dir().map(|mut p| {
+        p.push("QuickTranslateVN");
+        p.push("WebViewCache");
+        p
+    });
+    let mut web_context = WebContext::new(webview_data_dir);
+
     let badge_win = build_overlay_window(&event_loop, "QuickTranslateVN_Badge", 38.0, 38.0);
     let badge_ipc_proxy = proxy.clone();
-    let _badge_webview = WebViewBuilder::new()
+    let _badge_webview = WebViewBuilder::with_web_context(&mut web_context)
         .with_transparent(true)
         .with_html(BADGE_HTML)
         .with_ipc_handler(move |req| {
@@ -221,7 +228,7 @@ fn main() {
         110.0,
     );
     let popup_ipc_proxy = proxy.clone();
-    let popup_webview = WebViewBuilder::new()
+    let popup_webview = WebViewBuilder::with_web_context(&mut web_context)
         .with_transparent(true)
         .with_html(POPUP_HTML)
         .with_ipc_handler(move |req| {
@@ -254,6 +261,7 @@ fn main() {
     trim_idle_memory();
 
     event_loop.run(move |event, _, control_flow| {
+        let _ = (&web_context, &_tray_icon, &hotkey_manager);
         if let Some(deadline) = badge_hide_deadline {
             *control_flow = ControlFlow::WaitUntil(deadline);
         } else {
