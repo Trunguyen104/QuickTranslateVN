@@ -1,6 +1,6 @@
 [package]
 name = "quick-translate-vn"
-version = "3.1.0"
+version = "3.1.1"
 edition = "2021"
 authors = ["Trunguyen104"]
 description = "Ultra-lightweight cross-platform system-wide instant text & screen OCR translator"
@@ -12,23 +12,25 @@ name = "QuickTranslateVN"
 path = "src/main.rs"
 
 [dependencies]
-tao = "0.30"
-wry = "0.47"
-tray-icon = "0.19"
-global-hotkey = "0.6"
-arboard = "3.4"
-auto-launch = "0.5"
-ureq = { version = "2.10", features = ["json"] }
-urlencoding = "2.1"
+tao = "0.34"
+wry = "0.53"
+tray-icon = "0.21"
+global-hotkey = "0.7"
+arboard = { version = "3.6", default-features = false }
+auto-launch = "0.6"
+ureq = { version = "2.12", default-features = false, features = ["native-tls", "json", "gzip"] }
+native-tls = "0.2"
 base64 = "0.22"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-dirs = "5.0"
-single-instance = "0.3"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+arboard = { version = "3.6", default-features = false, features = ["wayland-data-control"] }
 
 [target.'cfg(windows)'.dependencies]
-windows-sys = { version = "0.59", features = [
+windows-sys = { version = "0.60", features = [
     "Win32_Foundation",
+    "Win32_Security",
     "Win32_UI_WindowsAndMessaging",
     "Win32_UI_Input_KeyboardAndMouse",
     "Win32_UI_HiDpi",
@@ -38,7 +40,7 @@ windows-sys = { version = "0.59", features = [
     "Win32_System_LibraryLoader",
     "Win32_Graphics_Gdi",
 ] }
-windows = { version = "0.58", features = [
+windows = { version = "0.61", features = [
     "Foundation",
     "Foundation_Collections",
     "Globalization",

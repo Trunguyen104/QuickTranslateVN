@@ -1,3 +1,5 @@
+//! Text normalization, smart PDF broken-line repair, and Vietnamese language detection.
+
 const SENTENCE_ENDINGS: &[char] = &['.', '!', '?', ':', ';', '”', '"', ')', ']'];
 
 /// Repairs broken lines and hyphenated line-wraps copied from multi-column PDFs.
@@ -7,7 +9,6 @@ pub fn clean_text(raw: &str, clean_pdf_breaks: bool) -> String {
         return String::new();
     }
 
-    // Replace common PDF ligatures
     let normalized = trimmed
         .replace('ﬁ', "fi")
         .replace('ﬂ', "fl")
@@ -38,7 +39,12 @@ pub fn clean_text(raw: &str, clean_pdf_breaks: bool) -> String {
         if line.ends_with('-') && i + 1 < lines.len() {
             let next_trim = lines[i + 1].trim();
             let first_next = next_trim.chars().next();
-            let prev_alpha = line.chars().rev().nth(1).map(|c| c.is_alphabetic()).unwrap_or(false);
+            let prev_alpha = line
+                .chars()
+                .rev()
+                .nth(1)
+                .map(|c| c.is_alphabetic())
+                .unwrap_or(false);
             if prev_alpha && first_next.map(|c| c.is_lowercase()).unwrap_or(false) {
                 out.push_str(&line[..line.len() - 1]);
                 continue;
@@ -57,7 +63,11 @@ pub fn clean_text(raw: &str, clean_pdf_breaks: bool) -> String {
                 || next.starts_with("• ")
                 || next.starts_with("* ")
                 || (next.len() > 2
-                    && next.chars().next().map(|c| c.is_ascii_digit()).unwrap_or(false)
+                    && next
+                        .chars()
+                        .next()
+                        .map(|c| c.is_ascii_digit())
+                        .unwrap_or(false)
                     && (next.as_bytes()[1] == b'.' || next.as_bytes()[1] == b')'));
 
             let ends_sentence = line
@@ -65,7 +75,11 @@ pub fn clean_text(raw: &str, clean_pdf_breaks: bool) -> String {
                 .last()
                 .map(|c| SENTENCE_ENDINGS.contains(&c))
                 .unwrap_or(false);
-            let next_starts_upper = next.chars().next().map(|c| c.is_uppercase()).unwrap_or(false);
+            let next_starts_upper = next
+                .chars()
+                .next()
+                .map(|c| c.is_uppercase())
+                .unwrap_or(false);
 
             if is_bullet || (ends_sentence && next_starts_upper && line.chars().count() < 45) {
                 out.push('\n');
@@ -97,7 +111,8 @@ fn collapse_spaces(s: &str) -> String {
 
 /// Detects characteristic Vietnamese diacritics so we can auto-flip VI <-> EN.
 pub fn looks_like_vietnamese(text: &str) -> bool {
-    const VN_CHARS: &str = "ăâđêôơưĂÂĐÊÔƠƯáàảãạấầẩẫậắằẳẵặéèẻẽẹếềểễệíìỉĩịóòỏõọốồổỗộớờởỡợúùủũụứừửữựýỳỷỹỵ";
+    const VN_CHARS: &str =
+        "ăâđêôơưĂÂĐÊÔƠƯáàảãạấầẩẫậắằẳẵặéèẻẽẹếềểễệíìỉĩịóòỏõọốồổỗộớờởỡợúùủũụứừửữựýỳỷỹỵ";
     let mut count = 0usize;
     let total_chars = text.chars().count();
     for c in text.chars() {
@@ -109,4 +124,34 @@ pub fn looks_like_vietnamese(text: &str) -> bool {
         }
     }
     false
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn repairs_pdf_hyphen_and_line_wrap() {
+        let raw = "System-wide transla-\ntion works seamlessly\nacross desktop apps.";
+        assert_eq!(
+            clean_text(raw, true),
+            "System-wide translation works seamlessly across desktop apps."
+        );
+    }
+
+    #[test]
+    fn preserves_bullet_items() {
+        let raw = "Key points:\n- First item\n- Second item";
+        assert_eq!(
+            clean_text(raw, true),
+            "Key points:\n- First item\n- Second item"
+        );
+    }
+
+    #[test]
+    fn detects_vietnamese_accurately() {
+        assert!(looks_like_vietnamese("Xin chào bạn"));
+        assert!(looks_like_vietnamese("đồng bộ"));
+        assert!(!looks_like_vietnamese("Instant translation tool"));
+    }
 }

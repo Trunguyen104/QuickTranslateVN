@@ -5,10 +5,16 @@ use tao::window::Window;
 
 #[derive(Debug, Clone)]
 pub enum UserEvent {
-    ShowBadge { x: i32, y: i32 },
+    ShowBadge {
+        x: i32,
+        y: i32,
+    },
     HotkeyTranslate,
     HotkeyOcr,
-    DoubleCopy { x: i32, y: i32 },
+    DoubleCopy {
+        x: i32,
+        y: i32,
+    },
     BadgeClicked,
     ExternalClick,
     EscapePressed,
@@ -21,8 +27,13 @@ pub enum UserEvent {
         anchor: (i32, i32),
         error_msg: String,
     },
-    TranslationCompleted { req_id: u64, payload_json: String },
-    TtsAudioReady { data_uri: String },
+    TranslationCompleted {
+        req_id: u64,
+        payload_json: String,
+    },
+    TtsAudioReady {
+        data_uri: String,
+    },
     IpcMessage(String),
 }
 
@@ -91,7 +102,9 @@ mod win_hooks {
     use tao::platform::windows::WindowExtWindows;
     use windows_sys::Win32::Foundation::{HWND, LPARAM, LRESULT, POINT, WPARAM};
     use windows_sys::Win32::System::LibraryLoader::GetModuleHandleW;
-    use windows_sys::Win32::System::Threading::{GetCurrentProcess, GetCurrentProcessId, SetProcessWorkingSetSize};
+    use windows_sys::Win32::System::Threading::{
+        GetCurrentProcess, GetCurrentProcessId, SetProcessWorkingSetSize,
+    };
     use windows_sys::Win32::UI::Input::KeyboardAndMouse::{
         GetAsyncKeyState, VK_C, VK_CONTROL, VK_ESCAPE, VK_MENU, VK_SHIFT,
     };
@@ -237,8 +250,9 @@ mod win_hooks {
                                     st.left_down = true;
                                     st.down_pt = pt;
                                     st.down_time = now;
-                                    st.down_was_ibeam = st.switches.enable_badge.load(Ordering::Relaxed)
-                                        && is_cursor_ibeam(st.ibeam_cursor);
+                                    st.down_was_ibeam =
+                                        st.switches.enable_badge.load(Ordering::Relaxed)
+                                            && is_cursor_ibeam(st.ibeam_cursor);
                                     let _ = st.proxy.send_event(UserEvent::ExternalClick);
                                 }
                             } else if msg == WM_RBUTTONDOWN || msg == WM_MOUSEWHEEL {
@@ -297,9 +311,11 @@ mod win_hooks {
                             } else if st.switches.enable_double_copy.load(Ordering::Relaxed)
                                 && vk == VK_C
                             {
-                                let ctrl = (GetAsyncKeyState(VK_CONTROL as i32) as u16 & 0x8000) != 0;
+                                let ctrl =
+                                    (GetAsyncKeyState(VK_CONTROL as i32) as u16 & 0x8000) != 0;
                                 let alt = (GetAsyncKeyState(VK_MENU as i32) as u16 & 0x8000) != 0;
-                                let shift = (GetAsyncKeyState(VK_SHIFT as i32) as u16 & 0x8000) != 0;
+                                let shift =
+                                    (GetAsyncKeyState(VK_SHIFT as i32) as u16 & 0x8000) != 0;
 
                                 if ctrl && !alt && !shift {
                                     let now = Instant::now();
@@ -428,7 +444,8 @@ mod unix_hooks {
                             let dbl_dist =
                                 ((ux - last_up_x).powi(2) + (uy - last_up_y).powi(2)).sqrt();
                             let dbl_ms = now.duration_since(last_up_time).as_millis();
-                            let is_dbl = dist < 8.0 && dbl_dist < 8.0 && (40..=400).contains(&dbl_ms);
+                            let is_dbl =
+                                dist < 8.0 && dbl_dist < 8.0 && (40..=400).contains(&dbl_ms);
 
                             last_up_x = ux;
                             last_up_y = uy;
@@ -446,20 +463,21 @@ mod unix_hooks {
                         Key::Escape => {
                             let _ = proxy.send_event(UserEvent::EscapePressed);
                         }
-                        Key::ControlLeft
-                        | Key::ControlRight
-                        | Key::MetaLeft
-                        | Key::MetaRight => {
+                        Key::ControlLeft | Key::ControlRight | Key::MetaLeft | Key::MetaRight => {
                             cmd_or_ctrl = true;
                         }
-                        Key::KeyC if cmd_or_ctrl && switches.enable_double_copy.load(Ordering::Relaxed) => {
+                        Key::KeyC
+                            if cmd_or_ctrl
+                                && switches.enable_double_copy.load(Ordering::Relaxed) =>
+                        {
                             let now = Instant::now();
                             if let Some(prev) = last_copy_time {
                                 let ms = now.duration_since(prev).as_millis();
                                 if (60..=450).contains(&ms) {
                                     last_copy_time = None;
                                     let (cx, cy) = get_last_cursor_pos();
-                                    let _ = proxy.send_event(UserEvent::DoubleCopy { x: cx, y: cy });
+                                    let _ =
+                                        proxy.send_event(UserEvent::DoubleCopy { x: cx, y: cy });
                                     return;
                                 }
                             }
@@ -472,10 +490,7 @@ mod unix_hooks {
                     EventType::KeyRelease(key) => {
                         if matches!(
                             key,
-                            Key::ControlLeft
-                                | Key::ControlRight
-                                | Key::MetaLeft
-                                | Key::MetaRight
+                            Key::ControlLeft | Key::ControlRight | Key::MetaLeft | Key::MetaRight
                         ) {
                             cmd_or_ctrl = false;
                         }

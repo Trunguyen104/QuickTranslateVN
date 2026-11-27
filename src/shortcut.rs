@@ -1,7 +1,15 @@
+//! Shortcut string parser and display formatter (`"Alt+Q"`, `"Ctrl+Shift+T"`, `"F8"`, etc.).
+
 use global_hotkey::hotkey::{Code, HotKey, Modifiers};
 
-/// Parses a human-readable shortcut string like `"Alt+Q"`, `"Ctrl+Shift+T"`, `"Ctrl+Q"`, `"F8"`
-/// into a cross-platform `global_hotkey::hotkey::HotKey`.
+pub fn format_shortcut_label(spec: &str) -> String {
+    if spec.trim().is_empty() || spec.eq_ignore_ascii_case("None") {
+        "Đã tắt".to_string()
+    } else {
+        spec.replace('+', " + ")
+    }
+}
+
 pub fn parse_shortcut(spec: &str) -> Option<HotKey> {
     let trimmed = spec.trim();
     if trimmed.is_empty() || trimmed.eq_ignore_ascii_case("None") {
@@ -11,15 +19,13 @@ pub fn parse_shortcut(spec: &str) -> Option<HotKey> {
     let mut mods = Modifiers::empty();
     let mut key_code: Option<Code> = None;
 
-    for part in trimmed.split('+').map(|s| s.trim()).filter(|s| !s.is_empty()) {
+    for part in trimmed.split('+').map(str::trim).filter(|s| !s.is_empty()) {
         match part.to_ascii_uppercase().as_str() {
             "CTRL" | "CONTROL" => mods |= Modifiers::CONTROL,
             "ALT" | "OPTION" | "OPT" => mods |= Modifiers::ALT,
             "SHIFT" => mods |= Modifiers::SHIFT,
             "WIN" | "SUPER" | "CMD" | "COMMAND" | "META" => mods |= Modifiers::SUPER,
-            k => {
-                key_code = match_code(k);
-            }
+            k => key_code = match_code(k),
         }
     }
 
@@ -81,5 +87,18 @@ fn match_code(k: &str) -> Option<Code> {
         "F11" => Some(Code::F11),
         "F12" => Some(Code::F12),
         _ => None,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parses_common_shortcuts() {
+        assert!(parse_shortcut("Alt+Q").is_some());
+        assert!(parse_shortcut("Ctrl+Shift+T").is_some());
+        assert!(parse_shortcut("F8").is_some());
+        assert!(parse_shortcut("None").is_none());
     }
 }

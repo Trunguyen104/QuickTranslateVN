@@ -1,8 +1,8 @@
-/// Cross-platform Screen Region Capture + Built-in OS OCR:
-/// - Windows: Captures `(x, y, w, h)` in memory via Win32 `BitBlt` and extracts text offline
-///   using built-in `Windows.Media.Ocr` (0 external dependencies, ~50ms).
-/// - macOS: Interactive `screencapture -i -x` + built-in Apple `Vision` (`VNRecognizeTextRequest`).
-/// - Linux: Interactive `gnome-screenshot -a` / `grim + slurp` + `tesseract`.
+//! Cross-platform Screen Region Capture + Built-in OS OCR:
+//! - Windows: Captures `(x, y, w, h)` in memory via Win32 `BitBlt` and extracts text offline
+//!   using built-in `Windows.Media.Ocr` (0 external dependencies, ~50ms).
+//! - macOS: Interactive `screencapture -i -x` + built-in Apple `Vision` (`VNRecognizeTextRequest`).
+//! - Linux: Interactive `gnome-screenshot -a` / `spectacle` + `tesseract`.
 
 #[cfg(target_os = "windows")]
 pub fn capture_rect_and_ocr(x: i32, y: i32, w: i32, h: i32) -> Result<String, String> {
@@ -264,7 +264,9 @@ mod unix_ocr {
             let out = Command::new("tesseract")
                 .args([&img_str, "stdout", "-l", "eng"])
                 .output()
-                .map_err(|_| "Cần cài gói `tesseract-ocr` trên Linux để đọc chữ từ ảnh.".to_string())?;
+                .map_err(|_| {
+                    "Cần cài gói `tesseract-ocr` trên Linux để đọc chữ từ ảnh.".to_string()
+                })?;
             let _ = fs::remove_file(&tmp_img);
 
             let text = String::from_utf8_lossy(&out.stdout).trim().to_string();

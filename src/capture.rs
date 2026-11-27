@@ -59,7 +59,7 @@ pub fn replace_selected_text(replacement: &str) -> bool {
 mod windows_impl {
     use super::*;
     use std::ffi::OsString;
-    use std::mem::{size_of, zeroed};
+    use std::mem::size_of;
     use std::os::windows::ffi::OsStringExt;
     use std::ptr::null_mut;
     use windows_sys::Win32::Foundation::{CloseHandle, HANDLE, HWND};
@@ -165,7 +165,14 @@ mod windows_impl {
 
             let mut inputs: Vec<INPUT> = Vec::with_capacity(12);
             for &mod_vk in &[
-                VK_LMENU, VK_RMENU, VK_MENU, VK_LSHIFT, VK_RSHIFT, VK_SHIFT, VK_LWIN, VK_RWIN,
+                VK_LMENU,
+                VK_RMENU,
+                VK_MENU,
+                VK_LSHIFT,
+                VK_RSHIFT,
+                VK_SHIFT,
+                VK_LWIN,
+                VK_RWIN,
                 VK_RCONTROL,
             ] {
                 if is_vk_down(mod_vk) {
@@ -197,7 +204,8 @@ mod windows_impl {
 
                     if let Some(s) = text {
                         if !s.is_empty() {
-                            let wide: Vec<u16> = s.encode_utf16().chain(std::iter::once(0)).collect();
+                            let wide: Vec<u16> =
+                                s.encode_utf16().chain(std::iter::once(0)).collect();
                             let bytes = wide.len() * 2;
                             let hmem = GlobalAlloc(GMEM_MOVEABLE, bytes);
                             if !hmem.is_null() {
@@ -205,7 +213,7 @@ mod windows_impl {
                                 if !dst.is_null() {
                                     std::ptr::copy_nonoverlapping(wide.as_ptr(), dst, wide.len());
                                     GlobalUnlock(hmem);
-                                    SetClipboardData(CF_UNICODETEXT as u32, hmem);
+                                    SetClipboardData(CF_UNICODETEXT, hmem);
                                 }
                             }
                         }
@@ -268,7 +276,10 @@ mod windows_impl {
         let captured = Clipboard::new().ok().and_then(|mut c| c.get_text().ok());
         set_clipboard_silent_win(backup.as_deref());
 
-        let cleaned = captured?.trim_end_matches(&['\r', '\n', '\t'][..]).trim().to_string();
+        let cleaned = captured?
+            .trim_end_matches(&['\r', '\n', '\t'][..])
+            .trim()
+            .to_string();
         if cleaned.is_empty() {
             None
         } else {
@@ -286,7 +297,6 @@ mod windows_impl {
         send_clean_ctrl_combo(VK_V);
         thread::sleep(Duration::from_millis(75));
         set_clipboard_silent_win(backup.as_deref());
-        let _ = unsafe { zeroed::<usize>() };
         true
     }
 }

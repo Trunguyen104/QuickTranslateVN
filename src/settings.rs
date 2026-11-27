@@ -1,7 +1,11 @@
+//! Persistent user settings and OS auto-launch management.
+
 use auto_launch::AutoLaunchBuilder;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
+
+use crate::platform::app_config_dir;
 
 fn default_shortcut() -> String {
     "Alt+Q".to_string()
@@ -36,22 +40,14 @@ impl Default for AppSettings {
 
 impl AppSettings {
     fn config_path() -> Option<PathBuf> {
-        dirs::config_dir().map(|mut p| {
-            p.push("QuickTranslateVN");
-            p.push("settings.json");
-            p
-        })
+        app_config_dir().map(|p| p.join("settings.json"))
     }
 
     pub fn load() -> Self {
-        if let Some(path) = Self::config_path() {
-            if let Ok(content) = fs::read_to_string(path) {
-                if let Ok(parsed) = serde_json::from_str::<AppSettings>(&content) {
-                    return parsed;
-                }
-            }
-        }
-        Self::default()
+        Self::config_path()
+            .and_then(|path| fs::read_to_string(path).ok())
+            .and_then(|raw| serde_json::from_str::<Self>(&raw).ok())
+            .unwrap_or_default()
     }
 
     pub fn save(&self) {
@@ -68,12 +64,14 @@ impl AppSettings {
     fn build_auto_launch() -> Option<auto_launch::AutoLaunch> {
         let exe = std::env::current_exe().ok()?;
         let exe_str = exe.to_str()?;
-        AutoLaunchBuilder::new()
-            .set_app_name("QuickTranslateVN")
-            .set_app_path(exe_str)
-            .set_use_launch_agent(true)
-            .build()
-            .ok()
+        let mut builder = AutoLaunchBuilder::new();
+        builder.set_app_name("QuickTranslateVN");
+        builder.set_app_path(exe_str);
+        #[cfg(target_os = "macos")]
+        {
+            builder.set_use_launch_agent(true);
+        }
+        builder.build().ok()
     }
 
     pub fn is_startup_enabled() -> bool {
