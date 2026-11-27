@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QuickTranslateVN — Dịch Nhanh Toàn Hệ Thống Siêu Nhẹ Cho Windows</title>
-  <meta name="description" content="Công cụ dịch văn bản đang chọn tức thì trên mọi ứng dụng Windows (Word, Excel, PDF, Chrome, VS Code). Siêu nhẹ ~230 KB, ~5 MB RAM, không chiếm focus, mã nguồn mở MIT." />
-  <meta property="og:title" content="QuickTranslateVN — System-wide Instant Translator for Windows" />
-  <meta property="og:description" content="Bôi đen văn bản ở bất kỳ ứng dụng Windows nào để dịch tức thì như Google Translate Extension & DeepL. Tối giản, siêu nhẹ, không ngốn RAM." />
+  <title>QuickTranslateVN — Dịch Nhanh Toàn Hệ Thống Siêu Nhẹ (Rust • Windows, macOS, Linux)</title>
+  <meta name="description" content="Công cụ dịch văn bản đang chọn tức thì viết bằng Rust cho Windows, macOS và Linux. Siêu nhẹ, ~5 MB RAM, không chiếm focus, mã nguồn mở MIT." />
+  <meta property="og:title" content="QuickTranslateVN — Cross-Platform Rust Instant Translator" />
+  <meta property="og:description" content="Bôi đen văn bản ở bất kỳ ứng dụng nào trên Windows, macOS và Linux để dịch tức thì như Google Translate Extension & DeepL." />
   <meta property="og:type" content="website" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='4' width='56' height='56' rx='16' fill='%23FFFFFF' stroke='%232563EB' stroke-width='4'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' fill='%232563EB' font-family='Segoe UI, sans-serif' font-weight='700' font-size='25'%3EVN%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="./styles.css" />
@@ -22,7 +22,7 @@
       <a href="#" class="brand">
         <span class="brand-logo">VN</span>
         <span class="brand-name">QuickTranslateVN</span>
-        <span class="version-pill">v2.1</span>
+        <span class="version-pill">v3.0 Rust</span>
       </a>
 
       <nav class="nav-links">
@@ -49,33 +49,33 @@
     <section class="hero container">
       <div class="hero-badge">
         <span class="dot"></span>
-        <span data-i18n="hero_tag">Mã nguồn mở MIT • Dành cho Windows 10 &amp; 11</span>
+        <span data-i18n="hero_tag">Viết 100% bằng Rust 🦀 • Hỗ trợ Windows, macOS &amp; Linux</span>
       </div>
 
       <h1 class="hero-title" data-i18n="hero_title">
-        Dịch tức thì trên mọi ứng dụng Windows.<br />
+        Dịch tức thì trên mọi hệ điều hành.<br />
         <span class="gradient-text">Tối giản. Siêu nhẹ. Không chiếm Focus.</span>
       </h1>
 
       <p class="hero-subtitle" data-i18n="hero_desc">
-        Mang trải nghiệm gọn gàng của Google Translate Extension và DeepL Desktop ra toàn hệ điều hành: Word, Excel, PDF, VS Code, trình duyệt. Bôi đen là dịch — không cài đặt phức tạp, không ngốn RAM.
+        Mang trải nghiệm gọn gàng của Google Translate Extension và DeepL Desktop ra toàn máy tính (Windows, macOS, Linux): Word, Excel, PDF, VS Code, trình duyệt. Biên dịch mã máy Rust gốc — không cần cài Runtime phụ, không ngốn RAM.
       </p>
 
       <div class="hero-cta">
         <a id="downloadBtn" href="#install" class="btn-primary">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          <span data-i18n="cta_download">Tải xuống cho Windows (.exe)</span>
+          <span data-i18n="cta_download">Tải bản cài đặt (Win / Mac / Linux)</span>
         </a>
         <a id="heroGithubBtn" href="#install" class="btn-secondary">
-          <span data-i18n="cta_source">Xem Mã Nguồn &amp; Cách Build</span>
+          <span data-i18n="cta_source">Xem Mã Nguồn Rust &amp; Cách Build</span>
         </a>
       </div>
 
       <!-- Metrics Strip -->
       <div class="stats-grid">
         <div class="stat-card">
-          <div class="stat-value">~230 KB</div>
-          <div class="stat-label" data-i18n="stat_size">Kích thước file .exe</div>
+          <div class="stat-value">100% Rust</div>
+          <div class="stat-label" data-i18n="stat_size">Win • macOS • Linux Native</div>
         </div>
         <div class="stat-card">
           <div class="stat-value">~5 MB</div>
@@ -83,7 +83,7 @@
         </div>
         <div class="stat-card">
           <div class="stat-value">0</div>
-          <div class="stat-label" data-i18n="stat_deps">Thư viện ngoài / API Key</div>
+          <div class="stat-label" data-i18n="stat_deps">Runtime phụ / API Key</div>
         </div>
         <div class="stat-card">
           <div class="stat-value">&lt; 150ms</div>
@@ -272,10 +272,10 @@
               </thead>
               <tbody>
                 <tr class="highlight-row">
-                  <td><strong>QuickTranslateVN</strong></td>
-                  <td><strong>~230 KB</strong></td>
+                  <td><strong>QuickTranslateVN (Rust)</strong></td>
+                  <td><strong>~2 MB Native</strong></td>
                   <td><strong>~5 – 25 MB</strong></td>
-                  <td>MIT (0 NuGet)</td>
+                  <td>MIT (Win/Mac/Linux)</td>
                 </tr>
                 <tr>
                   <td>App nền Electron</td>
@@ -328,9 +328,9 @@
         <div class="install-card">
           <div>
             <div class="step-num">Cách 1</div>
-            <h3 data-i18n="inst_c1_title">Tải bản chạy ngay (.exe)</h3>
+            <h3 data-i18n="inst_c1_title">Tải bản biên dịch sẵn (Win / Mac / Linux)</h3>
             <p data-i18n="inst_c1_desc">
-              Tải file <code>QuickTranslateVN.exe</code> (~230 KB) từ mục GitHub Releases và mở lên. Biểu tượng <strong>VN</strong> nền trắng viền xanh sẽ nằm gọn ở góc phải thanh Taskbar.
+              Tải gói chạy trực tiếp cho <strong>Windows (.exe)</strong>, <strong>macOS (.tar.gz)</strong> hoặc <strong>Linux (.tar.gz)</strong> tại trang GitHub Releases — không cần cài thêm bất kỳ Runtime nào.
             </p>
           </div>
           <a id="releaseCardBtn" href="https://github.com" target="_blank" rel="noopener" class="btn-primary btn-full">
@@ -341,15 +341,14 @@
         <div class="install-card">
           <div>
             <div class="step-num">Cách 2</div>
-            <h3 data-i18n="inst_c2_title">Tự biên dịch từ mã nguồn</h3>
-            <p data-i18n="inst_c2_desc">Yêu cầu máy có .NET 8 SDK. Sao chép và chạy lệnh PowerShell sau:</p>
+            <h3 data-i18n="inst_c2_title">Tự biên dịch bằng Cargo (Rust)</h3>
+            <p data-i18n="inst_c2_desc">Yêu cầu máy có Rust toolchain (<code>rustup</code>). Chạy lệnh sau trên mọi hệ điều hành:</p>
           </div>
           <div class="code-block">
             <button id="copyCmdBtn" type="button" class="copy-code-btn">Copy</button>
             <pre><code id="buildCmdText">git clone https://github.com/YOUR_USERNAME/QuickTranslateVN.git
 cd QuickTranslateVN
-dotnet publish -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -o ./dist
-.\dist\QuickTranslateVN.exe</code></pre>
+cargo build --release</code></pre>
           </div>
         </div>
       </div>

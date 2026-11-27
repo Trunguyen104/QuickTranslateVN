@@ -1,62 +1,54 @@
-# 🌐 QuickTranslateVN
+# 🌐 QuickTranslateVN (Rust Cross-Platform)
 
-**Công cụ dịch nhanh văn bản đang chọn trên toàn hệ điều hành Windows — Siêu nhẹ, Zero-Config, 0 thư viện ngoài.**
+**Công cụ dịch nhanh văn bản đang chọn trên toàn hệ thống — viết 100% bằng Rust, siêu nhẹ, giao diện Trắng Tối Giản, tương thích mọi nền tảng (Windows • macOS • Linux).**
 
-Mang trải nghiệm gọn nhẹ của *Google Translate Extension* và *DeepL Ctrl+C+C* ra mọi ứng dụng Windows (Word, Excel, PowerPoint, PDF Reader, Chrome, Edge, VS Code, Notepad...).
+Mang trải nghiệm gọn nhẹ của *Google Translate Extension* và *DeepL Desktop* ra mọi ứng dụng trên máy tính (Word, Excel, PDF Reader, Chrome, Safari, Firefox, VS Code, Slack, Notepad...).
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![.NET 8 WPF](https://img.shields.io/badge/.NET-8.0%20Zero--Dependency-512BD4.svg)](#)
+[![Language: Rust](https://img.shields.io/badge/Built%20with-Rust%20%F0%9F%A6%80-orange.svg)](#)
+[![Platform: Windows | macOS | Linux](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-2563EB.svg)](#)
 
 ---
 
-## ✨ Sử Dụng Ngay (Không Cần Cài Đặt Phức Tạp)
+## ✨ Điểm Nổi Bật
 
-1. **Kéo chuột bôi đen chữ → bấm nút `[文A]`** hiện cạnh chuột *(chỉ hiện khi bôi đen chữ, tự ẩn nếu không bấm)*.
-2. **Hoặc bôi đen chữ → nhấn `Alt + Q`** để hiện thẳng Popup dịch tức thì.
-3. **Hoặc bôi đen chữ → nhấn đúp `Ctrl + C + C`** (kiểu DeepL Desktop).
-
-### Chức năng ngay trên thanh Popup gọn nhẹ:
-- **`EN → VI ⇄`:** Tự động nhận diện chiều dịch Anh ↔ Việt (bấm để lật chiều).
-- **`🔊`:** Nghe phát âm câu gốc.
-- **`⏎`:** Thay thế trực tiếp đoạn đang chọn trong ứng dụng gốc bằng bản dịch.
-- **`📋`:** Sao chép bản dịch.
-- **`📌` / `✕`:** Ghim cửa sổ hoặc đóng nhanh (`ESC` / bấm chuột ra ngoài tự đóng).
-- **Từ điển & Phiên âm:** Khi chọn từ vựng lẻ, tự động hiện thêm phiên âm `/.../` và nghĩa theo từ loại.
-
-### Tùy chọn tối giản dưới System Tray (góc phải Taskbar):
-Nhấp chuột phải vào biểu tượng **`VN`** để bật/tắt nhanh:
-- `☑ Hiện nút [文A] khi bôi đen chuột`
-- `☑ Dịch khi nhấn đúp Ctrl + C + C`
-- `☑ Khởi động cùng Windows`
+- **100% Native Rust (Không cần cài .NET hay Node.js Runtime):** Đóng gói thành một file chạy mã máy duy nhất, chạy mượt trên **Windows 10/11**, **macOS (Apple Silicon & Intel)** và **Linux (X11 & Wayland)**.
+- **3 Cách Kích Hoạt Tức Thì:**
+  1. **Kéo chuột bôi đen chữ → bấm nút `[文A]`** nổi cạnh trỏ chuột.
+  2. **Bôi đen chữ → nhấn `Alt + Q`** (`Option + Q` trên macOS).
+  3. **Bôi đen chữ → nhấn đúp `Ctrl + C + C`** (`Cmd + C + C` trên macOS — kiểu DeepL Desktop).
+- **Thanh Popup Trắng Tối Giản (Clean White UI):**
+  - **`EN → VI ⇄`:** Tự động nhận diện chiều dịch Anh ↔ Việt (bấm để đảo chiều).
+  - **Nghe phát âm**, **Sao chép**, **Thay thế trực tiếp vào ô đang soạn (`⏎`)**, và **Ghim cửa sổ**.
+  - Tự động hiển thị phiên âm `/.../` và từ điển theo từ loại khi bôi đen từ lẻ.
+- **Tối Ưu Sâu Theo Từng Hệ Điều Hành:**
+  - **Windows:** Cửa sổ `WS_EX_NOACTIVATE` không cướp focus, nhận diện con trỏ `IDC_IBEAM`, khôi phục Clipboard kèm cờ chống ghi rác `Win + V`.
+  - **Linux:** Đọc trực tiếp bộ nhớ đệm **Primary Selection** (X11/Wayland) không cần giả lập phím, kèm fallback `xdotool`/`wtype`.
+  - **macOS:** Chạy gọn trên thanh **Menu Bar** (`ActivationPolicy::Accessory`, không chiếm chỗ dưới Dock), lưu cấu hình chuẩn LaunchAgents.
 
 ---
 
-## ⚡ Tại Sao Siêu Nhẹ?
+## 🚀 Tải Về & Biên Dịch Từ Mã Nguồn
 
-- **0 gói NuGet ngoài (Zero External Dependencies):** Viết hoàn toàn trên `.NET 8` & Win32 API gốc, dung lượng file `.exe` chỉ **~180 KB**.
-- **Không chiếm Focus (`WS_EX_NOACTIVATE`):** Không làm mất vùng đang chọn hay gián đoạn việc gõ phím trong ứng dụng hiện tại.
-- **Bảo vệ Clipboard & `Win + V`:** Ưu tiên đọc qua **Windows UI Automation** (Word, Excel, Notepad) trước; khi fallback sang Clipboard sẽ khôi phục nguyên vẹn dữ liệu cũ và gắn cờ chặn ghi rác lịch sử `Win + V`.
-- **Tự động thu gọn RAM nền:** Mức Working Set khi chạy ngầm dưới System Tray chỉ vài MB.
+### Cách 1: Tải bản biên dịch sẵn
+Tải gói phù hợp với hệ điều hành của bạn (`Windows .exe`, `macOS .tar.gz`, `Linux .tar.gz`) tại trang **[GitHub Releases](https://github.com/Trunguyen104/QuickTranslateVN/releases)**.
 
----
+### Cách 2: Tự biên dịch bằng Cargo (Rust)
 
-## 🚀 Biên Dịch Từ Mã Nguồn
+*(Trên Ubuntu/Debian Linux, cài gói thư viện WebView hệ thống trước khi build: `sudo apt install pkg-config libgtk-3-dev libwebkit2gtk-4.1-dev libayatana-appindicator3-dev libxdo-dev libx11-dev libxi-dev libxtst-dev`)*
 
-```powershell
-dotnet publish QuickTranslateVN.csproj -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -o ./dist
+```bash
+git clone https://github.com/Trunguyen104/QuickTranslateVN.git
+cd QuickTranslateVN
+cargo build --release
 ```
-Chạy trực tiếp `./dist/QuickTranslateVN.exe` (yêu cầu máy có sẵn [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)).
+File thực thi sau khi biên dịch nằm tại `target/release/QuickTranslateVN` (hoặc `QuickTranslateVN.exe` trên Windows).
 
 ---
 
 ## 🌍 Trang Chủ Giới Thiệu (GitHub Pages)
 
-Thư mục [`docs/`](docs/index.html) chứa trang Landing Page giới thiệu công cụ kèm **Demo tương tác bôi đen dịch trực tiếp ngay trên trình duyệt** (hỗ trợ song ngữ `VI / EN`).
-
-Để bật trang web sau khi push lên GitHub:
-1. Vào **Settings → Pages** trên repository GitHub của bạn.
-2. Tại mục **Build and deployment → Source**, chọn **GitHub Actions** (hoặc chọn **Deploy from a branch** → nhánh `main` → thư mục `/docs`).
-3. Website sẽ tự động xuất bản tại `https://<username>.github.io/<repo-name>/`.
+Xem bản Demo tương tác trực tiếp trên trình duyệt tại: **https://trunguyen104.github.io/QuickTranslateVN/** (mã nguồn nằm tại thư mục [`docs/`](docs/index.html)).
 
 ---
 

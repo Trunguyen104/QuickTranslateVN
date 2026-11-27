@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<style>
+  * { box-sizing: border-box; user-select: none; -webkit-user-select: none; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  }
+  .badge {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #2563eb;
+    font-size: 11.5px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 7px rgba(15, 23, 42, 0.16);
+    transition: background 0.12s, border-color 0.12s, transform 0.1s;
+  }
+  .badge:hover {
+    background: #eff6ff;
+    border-color: #60a5fa;
+    transform: scale(1.05);
+  }
+</style>
+</head>
+<body>
+  <div class="badge" id="btn" title="Dịch nhanh (Alt+Q)">文A</div>
+  <script>
+    document.getElementById("btn").addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (window.ipc) {
+        window.ipc.postMessage(JSON.stringify({ cmd: "badge_clicked" }));
+      }
+    });
+  </script>
+</body>
+</html>

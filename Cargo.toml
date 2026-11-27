@@ -1,0 +1,50 @@
+[package]
+name = "quick-translate-vn"
+version = "3.0.0"
+edition = "2021"
+authors = ["Trunguyen104"]
+description = "Ultra-lightweight cross-platform system-wide instant text translator (Windows, macOS, Linux)"
+license = "MIT"
+repository = "https://github.com/Trunguyen104/QuickTranslateVN"
+
+[[bin]]
+name = "QuickTranslateVN"
+path = "src/main.rs"
+
+[dependencies]
+tao = "0.30"
+wry = "0.47"
+tray-icon = "0.19"
+global-hotkey = "0.6"
+arboard = "3.4"
+auto-launch = "0.5"
+ureq = { version = "2.10", features = ["json"] }
+urlencoding = "2.1"
+base64 = "0.22"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+dirs = "5.0"
+single-instance = "0.3"
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.59", features = [
+    "Win32_Foundation",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_HiDpi",
+    "Win32_System_DataExchange",
+    "Win32_System_Memory",
+    "Win32_System_Threading",
+    "Win32_System_LibraryLoader",
+    "Win32_Graphics_Gdi",
+] }
+
+[target.'cfg(not(windows))'.dependencies]
+rdev = "0.5"
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

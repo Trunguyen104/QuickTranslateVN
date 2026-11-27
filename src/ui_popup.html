@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<style>
+  * {
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 999px;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    overflow: hidden;
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Inter, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    padding: 6px;
+  }
+
+  .card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.13), 0 1px 4px rgba(15, 23, 42, 0.06);
+    overflow: hidden;
+  }
+
+  .header {
+    background: #f8fafc;
+    border-bottom: 1px solid #f1f5f9;
+    padding: 6px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: move;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .lang-pill {
+    background: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+    padding: 2.5px 8px;
+    font-size: 11.5px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s;
+  }
+
+  .lang-pill:hover {
+    background: #dbeafe;
+    color: #1d4ed8;
+  }
+
+  .speed {
+    color: #94a3b8;
+    font-size: 10.5px;
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .icon-btn {
+    background: transparent;
+    color: #64748b;
+    border: none;
+    border-radius: 6px;
+    width: 26px;
+    height: 24px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s;
+  }
+
+  .icon-btn:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+  }
+
+  .icon-btn.pinned {
+    background: #dbeafe;
+    color: #2563eb;
+  }
+
+  .body {
+    padding: 10px 13px 12px;
+    max-height: 310px;
+    overflow-y: auto;
+  }
+
+  .phonetic {
+    color: #64748b;
+    font-style: italic;
+    font-size: 12px;
+    margin-bottom: 3px;
+  }
+
+  .translated {
+    color: #0f172a;
+    font-size: 14.5px;
+    line-height: 1.52;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .translated.loading {
+    color: #64748b;
+  }
+
+  .translated.error {
+    color: #dc2626;
+  }
+
+  .translated::selection {
+    background: #bfdbfe;
+    color: #0f172a;
+  }
+
+  .divider {
+    height: 1px;
+    background: #f1f5f9;
+    margin: 8px 0 6px;
+  }
+
+  .dict {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .dict-row {
+    font-size: 12px;
+    color: #334155;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .pos {
+    background: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 10.5px;
+    font-weight: 600;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap" id="wrapRoot">
+    <div class="card">
+      <div class="header" id="dragHeader">
+        <div class="header-left">
+          <button type="button" class="lang-pill" id="btnSwap" title="Đảo chiều ngôn ngữ (VI ↔ EN)">EN → VI &nbsp;⇄</button>
+          <span class="speed" id="txtSpeed"></span>
+        </div>
+        <div class="actions">
+          <button type="button" class="icon-btn" id="btnSpeak" title="Nghe phát âm">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5.5H4.8L8.2 2.8V11.2L4.8 8.5H2Z"/><path d="M10.2 4.8C11.2 5.8 11.2 8.2 10.2 9.2"/><path d="M11.8 3.2C13.5 5 13.5 9 11.8 10.8"/></svg>
+          </button>
+          <button type="button" class="icon-btn" id="btnReplace" title="Thay thế trực tiếp đoạn đang chọn bằng bản dịch">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11.5 3.5V8.5C11.5 9.3 10.8 10 10 10H3"/><path d="M5.8 7.2L2.8 10L5.8 12.8"/></svg>
+          </button>
+          <button type="button" class="icon-btn" id="btnCopy" title="Sao chép bản dịch">
+            <svg id="svgCopyNormal" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4.5" width="8.5" height="8.5" rx="1.2"/><path d="M2.5 9.5H2C1.5 9.5 1.5 9 1.5 8.5V2.5C1.5 2 2 1.5 2.5 1.5H8.5C9 1.5 9.5 2 9.5 2.5V3"/></svg>
+            <svg id="svgCopyDone" class="hidden" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7.5L5.8 10.8L12 3.5"/></svg>
+          </button>
+          <button type="button" class="icon-btn" id="btnPin" title="Ghim cửa sổ">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2H9V6L11 8V9.5H3V8L5 6Z"/><path d="M7 9.5V13.5"/></svg>
+          </button>
+          <button type="button" class="icon-btn" id="btnClose" title="Đóng (ESC)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 3L11 11M11 3L3 11"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="body">
+        <div id="txtPhonetic" class="phonetic hidden"></div>
+        <div id="txtTranslated" class="translated loading">Đang dịch...</div>
+        <div id="dictDivider" class="divider hidden"></div>
+        <div id="panelDict" class="dict hidden"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const send = (obj) => window.ipc && window.ipc.postMessage(JSON.stringify(obj));
+
+    const wrapRoot = document.getElementById("wrapRoot");
+    const btnSwap = document.getElementById("btnSwap");
+    const txtSpeed = document.getElementById("txtSpeed");
+    const txtPhonetic = document.getElementById("txtPhonetic");
+    const txtTranslated = document.getElementById("txtTranslated");
+    const dictDivider = document.getElementById("dictDivider");
+    const panelDict = document.getElementById("panelDict");
+    const svgCopyNormal = document.getElementById("svgCopyNormal");
+    const svgCopyDone = document.getElementById("svgCopyDone");
+    const btnPin = document.getElementById("btnPin");
+
+    let currentAudio = null;
+    let isPinned = false;
+
+    function notifyResize() {
+      requestAnimationFrame(() => {
+        const h = Math.min(390, Math.max(82, Math.ceil(wrapRoot.getBoundingClientRect().height)));
+        send({ cmd: "resize", height: h });
+      });
+    }
+
+    document.getElementById("dragHeader").addEventListener("mousedown", (e) => {
+      if (e.target.closest("button")) return;
+      e.preventDefault();
+      send({ cmd: "drag_window" });
+    });
+
+    btnSwap.addEventListener("click", () => send({ cmd: "swap_lang" }));
+    document.getElementById("btnSpeak").addEventListener("click", () => send({ cmd: "speak" }));
+    document.getElementById("btnReplace").addEventListener("click", () => send({ cmd: "replace" }));
+
+    document.getElementById("btnCopy").addEventListener("click", () => {
+      send({ cmd: "copy" });
+      svgCopyNormal.classList.add("hidden");
+      svgCopyDone.classList.remove("hidden");
+      setTimeout(() => {
+        svgCopyDone.classList.add("hidden");
+        svgCopyNormal.classList.remove("hidden");
+      }, 1000);
+    });
+
+    btnPin.addEventListener("click", () => {
+      isPinned = !isPinned;
+      btnPin.classList.toggle("pinned", isPinned);
+      send({ cmd: "pin", pinned: isPinned });
+    });
+
+    document.getElementById("btnClose").addEventListener("click", () => send({ cmd: "close" }));
+
+    window.__renderLoading = function () {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio = null;
+      }
+      txtSpeed.textContent = "";
+      txtPhonetic.classList.add("hidden");
+      dictDivider.classList.add("hidden");
+      panelDict.classList.add("hidden");
+      panelDict.innerHTML = "";
+      svgCopyNormal.classList.remove("hidden");
+      svgCopyDone.classList.add("hidden");
+      txtTranslated.className = "translated loading";
+      txtTranslated.textContent = "Đang dịch...";
+      notifyResize();
+    };
+
+    window.__renderResult = function (data) {
+      btnSwap.innerHTML = `${data.source_lang.toUpperCase()} → ${data.target_lang.toUpperCase()} &nbsp;⇄`;
+      txtSpeed.textContent = data.from_cache ? "cache" : `${data.elapsed_ms}ms`;
+      txtTranslated.className = "translated";
+      txtTranslated.textContent = data.translated_text;
+
+      if (data.phonetic) {
+        txtPhonetic.textContent = `/${data.phonetic}/`;
+        txtPhonetic.classList.remove("hidden");
+      } else {
+        txtPhonetic.classList.add("hidden");
+      }
+
+      if (Array.isArray(data.dict) && data.dict.length > 0) {
+        panelDict.innerHTML = "";
+        for (const item of data.dict) {
+          const row = document.createElement("div");
+          row.className = "dict-row";
+          if (item.pos) {
+            const badge = document.createElement("span");
+            badge.className = "pos";
+            badge.textContent = item.pos;
+            row.appendChild(badge);
+          }
+          const terms = document.createElement("span");
+          terms.textContent = item.meanings.join(", ");
+          row.appendChild(terms);
+          panelDict.appendChild(row);
+        }
+        dictDivider.classList.remove("hidden");
+        panelDict.classList.remove("hidden");
+      } else {
+        dictDivider.classList.add("hidden");
+        panelDict.classList.add("hidden");
+      }
+      notifyResize();
+    };
+
+    window.__renderError = function (msg) {
+      txtTranslated.className = "translated error";
+      txtTranslated.textContent = msg;
+      notifyResize();
+    };
+
+    window.__playAudio = function (dataUri) {
+      try {
+        if (currentAudio) {
+          currentAudio.pause();
+        }
+        currentAudio = new Audio(dataUri);
+        currentAudio.play().catch(() => {});
+      } catch {}
+    };
+  </script>
+</body>
+</html>
