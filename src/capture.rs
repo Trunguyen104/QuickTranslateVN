@@ -74,8 +74,9 @@ mod windows_impl {
         OpenProcess, QueryFullProcessImageNameW, PROCESS_QUERY_LIMITED_INFORMATION,
     };
     use windows_sys::Win32::UI::Input::KeyboardAndMouse::{
-        GetAsyncKeyState, SendInput, INPUT, INPUT_0, INPUT_KEYBOARD, KEYBDINPUT, KEYEVENTF_KEYUP,
-        VK_C, VK_CONTROL, VK_MENU, VK_SHIFT, VK_V,
+        GetAsyncKeyState, MapVirtualKeyW, SendInput, INPUT, INPUT_0, INPUT_KEYBOARD, KEYBDINPUT,
+        KEYEVENTF_KEYUP, VK_C, VK_CONTROL, VK_LCONTROL, VK_LMENU, VK_LSHIFT, VK_LWIN, VK_MENU,
+        VK_RCONTROL, VK_RMENU, VK_RSHIFT, VK_RWIN, VK_SHIFT, VK_V,
     };
     use windows_sys::Win32::UI::WindowsAndMessaging::{
         GetForegroundWindow, GetWindowThreadProcessId,
@@ -125,12 +126,13 @@ mod windows_impl {
     }
 
     fn make_key_input(vk: u16, key_up: bool) -> INPUT {
+        let scan = unsafe { MapVirtualKeyW(vk as u32, 0) as u16 };
         INPUT {
             r#type: INPUT_KEYBOARD,
             Anonymous: INPUT_0 {
                 ki: KEYBDINPUT {
                     wVk: vk,
-                    wScan: 0,
+                    wScan: scan,
                     dwFlags: if key_up { KEYEVENTF_KEYUP } else { 0 },
                     time: 0,
                     dwExtraInfo: 0,
@@ -139,30 +141,45 @@ mod windows_impl {
         }
     }
 
+    unsafe fn is_vk_down(vk: u16) -> bool {
+        (GetAsyncKeyState(vk as i32) as u16 & 0x8000) != 0
+    }
+
     fn send_clean_ctrl_combo(vk_letter: u16) {
         unsafe {
-            // Wait briefly if user is still releasing Alt/Shift from Alt+Q
-            for _ in 0..10 {
-                let alt_down = (GetAsyncKeyState(VK_MENU as i32) as u16 & 0x8000) != 0;
-                let shift_down = (GetAsyncKeyState(VK_SHIFT as i32) as u16 & 0x8000) != 0;
-                if !alt_down && !shift_down {
+            // Wait up to ~320ms for physical Alt/Shift/Win release after shortcut press (e.g. Alt+Q, Ctrl+Shift+T)
+            for _ in 0..26 {
+                let any_mod = is_vk_down(VK_MENU)
+                    || is_vk_down(VK_LMENU)
+                    || is_vk_down(VK_RMENU)
+                    || is_vk_down(VK_SHIFT)
+                    || is_vk_down(VK_LSHIFT)
+                    || is_vk_down(VK_RSHIFT)
+                    || is_vk_down(VK_LWIN)
+                    || is_vk_down(VK_RWIN);
+                if !any_mod {
                     break;
                 }
-                thread::sleep(Duration::from_millis(14));
+                thread::sleep(Duration::from_millis(12));
             }
 
-            let mut inputs: Vec<INPUT> = Vec::with_capacity(6);
-            if (GetAsyncKeyState(VK_MENU as i32) as u16 & 0x8000) != 0 {
-                inputs.push(make_key_input(VK_MENU, true));
-            }
-            if (GetAsyncKeyState(VK_SHIFT as i32) as u16 & 0x8000) != 0 {
-                inputs.push(make_key_input(VK_SHIFT, true));
+            let mut inputs: Vec<INPUT> = Vec::with_capacity(12);
+            for &mod_vk in &[
+                VK_LMENU, VK_RMENU, VK_MENU, VK_LSHIFT, VK_RSHIFT, VK_SHIFT, VK_LWIN, VK_RWIN,
+                VK_RCONTROL,
+            ] {
+                if is_vk_down(mod_vk) {
+                    inputs.push(make_key_input(mod_vk, true));
+                }
             }
 
-            inputs.push(make_key_input(VK_CONTROL, false));
+            inputs.push(make_key_input(VK_LCONTROL, false));
             inputs.push(make_key_input(vk_letter, false));
             inputs.push(make_key_input(vk_letter, true));
-            inputs.push(make_key_input(VK_CONTROL, true));
+            inputs.push(make_key_input(VK_LCONTROL, true));
+            if is_vk_down(VK_CONTROL) {
+                inputs.push(make_key_input(VK_CONTROL, true));
+            }
 
             SendInput(
                 inputs.len() as u32,

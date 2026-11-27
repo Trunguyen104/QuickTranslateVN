@@ -7,10 +7,20 @@ use tao::window::Window;
 pub enum UserEvent {
     ShowBadge { x: i32, y: i32 },
     HotkeyTranslate,
+    HotkeyOcr,
     DoubleCopy { x: i32, y: i32 },
     BadgeClicked,
     ExternalClick,
     EscapePressed,
+    TextCaptured {
+        req_id: u64,
+        anchor: (i32, i32),
+        cleaned_text: String,
+    },
+    OcrFailed {
+        anchor: (i32, i32),
+        error_msg: String,
+    },
     TranslationCompleted { req_id: u64, payload_json: String },
     TtsAudioReady { data_uri: String },
     IpcMessage(String),

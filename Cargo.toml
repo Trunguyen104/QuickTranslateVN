@@ -1,9 +1,9 @@
 [package]
 name = "quick-translate-vn"
-version = "3.0.0"
+version = "3.1.0"
 edition = "2021"
 authors = ["Trunguyen104"]
-description = "Ultra-lightweight cross-platform system-wide instant text translator (Windows, macOS, Linux)"
+description = "Ultra-lightweight cross-platform system-wide instant text & screen OCR translator"
 license = "MIT"
 repository = "https://github.com/Trunguyen104/QuickTranslateVN"
 
@@ -38,6 +38,18 @@ windows-sys = { version = "0.59", features = [
     "Win32_System_LibraryLoader",
     "Win32_Graphics_Gdi",
 ] }
+windows = { version = "0.58", features = [
+    "Foundation",
+    "Foundation_Collections",
+    "Globalization",
+    "Graphics_Imaging",
+    "Media_Ocr",
+    "Security_Cryptography",
+    "Storage_Streams",
+] }
+
+[target.'cfg(windows)'.build-dependencies]
+winresource = "0.1"
 
 [target.'cfg(not(windows))'.dependencies]
 rdev = "0.5"

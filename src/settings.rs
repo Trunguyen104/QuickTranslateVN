@@ -3,11 +3,23 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
 
+fn default_shortcut() -> String {
+    "Alt+Q".to_string()
+}
+
+fn default_ocr_shortcut() -> String {
+    "Alt+S".to_string()
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppSettings {
     pub show_floating_badge: bool,
     pub enable_double_copy: bool,
     pub clean_pdf_line_breaks: bool,
+    #[serde(default = "default_shortcut")]
+    pub shortcut: String,
+    #[serde(default = "default_ocr_shortcut")]
+    pub ocr_shortcut: String,
 }
 
 impl Default for AppSettings {
@@ -16,6 +28,8 @@ impl Default for AppSettings {
             show_floating_badge: true,
             enable_double_copy: true,
             clean_pdf_line_breaks: true,
+            shortcut: default_shortcut(),
+            ocr_shortcut: default_ocr_shortcut(),
         }
     }
 }
